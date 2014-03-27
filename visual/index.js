@@ -55,4 +55,4 @@ function animate () {
 }
 animate();
 
-
+require('./primus_util');
