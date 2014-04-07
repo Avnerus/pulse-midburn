@@ -159,13 +159,13 @@ Character.prototype.fireParticles = function(){
     });
 
 // Create a single emitter
-    var particleEmitter = new SPE.Emitter({
+    this.particleEmitter = new SPE.Emitter({
         type: 'sphere',
         position: new THREE.Vector3(self.mesh.position.x, self.mesh.position.y, self.mesh.position.z),
 //        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
 //        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
         radius: 100,  // USE WHEN type=sphere OR type=disk
-        speed: 40,  // USE WHEN type=sphere OR type=disk
+        speed: 80,  // USE WHEN type=sphere OR type=disk
         particlesPerSecond: 100,
         sizeStart: 30,
         sizeEnd: 0,
@@ -180,7 +180,7 @@ Character.prototype.fireParticles = function(){
     });
 
     // Add the emitter to the group.
-    this.particleGroup.addEmitter(particleEmitter);
+    this.particleGroup.addEmitter(this.particleEmitter);
 
     this.basicScene.scene.add(this.particleGroup.mesh);
 
@@ -327,6 +327,8 @@ Character.prototype.onTick = function(delta){
 
     // Run a new step of the user's motions
     this.motion();
+
+    this.particleEmitter.position = this.mesh.position;
 
     this.particleGroup.tick(delta);
 }
