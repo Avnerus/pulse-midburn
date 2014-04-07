@@ -148,6 +148,7 @@ Character.prototype.init = function (args) {
 }
 
 Character.prototype.fireParticles = function(){
+    var self = this;
 
     this.particleGroup = new SPE.Group({
         // Give the particles in this group a texture
@@ -160,7 +161,7 @@ Character.prototype.fireParticles = function(){
 // Create a single emitter
     var particleEmitter = new SPE.Emitter({
         type: 'sphere',
-        position: new THREE.Vector3(0, 0, 0),
+        position: new THREE.Vector3(self.mesh.position.x, self.mesh.position.y, self.mesh.position.z),
 //        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
 //        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
         radius: 100,  // USE WHEN type=sphere OR type=disk
