@@ -4,7 +4,8 @@
 
 'use strict';
 
-var THREE = require('three');
+//var THREE = require('three');
+var TWEEN = require('tween.js');
 
 function Character(args){
     this.init(args);
@@ -41,10 +42,10 @@ Character.prototype.init = function (args) {
 
 
     // adding simple-glow
-    var geometry = new THREE.SphereGeometry( 30, 32, 16 );
-    var material = new THREE.MeshLambertMaterial( { color: 0x000088 } );
-    this.mesh = new THREE.Mesh( geometry, material );
-    this.mesh.position.set(0,40,0);
+    var geometry = new THREE.SphereGeometry(30, 32, 16);
+    var material = new THREE.MeshLambertMaterial({color: 0x000088});
+    this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh.position.set(0, 40 ,0);
 
 
 //    // SUPER SIMPLE GLOW EFFECT
@@ -65,7 +66,7 @@ Character.prototype.init = function (args) {
 
 
     // Particles
-//    // use sprite because it appears the same from all angles
+    // use sprite because it appears the same from all angles
 //    var particleTexture = THREE.ImageUtils.loadTexture( '/image/spark.png' );
 //    var particleGroup = new THREE.Object3D();
 //    var particleAttributes = { startSize: [], startPosition: [], randomness: [] };
@@ -101,11 +102,7 @@ Character.prototype.init = function (args) {
 //
 //    particleGroup.position.y = 50;
 //    this.mesh.add(particleGroup); // this centers the glow at the mesh
-//    // end - particles
-
-
-
-
+    // end - particles
 
     // Set and add its head
     this.head = new THREE.Mesh(head, material);
@@ -145,7 +142,92 @@ Character.prototype.init = function (args) {
     // Set the current animation step
     this.step = 0;
 
-//    this.mesh.position.y = 120;
+    this.addHoverAnimation();
+
+    this.fireParticles();
+}
+
+Character.prototype.fireParticles = function(){
+
+    this.particleGroup = new SPE.Group({
+        // Give the particles in this group a texture
+        texture: THREE.ImageUtils.loadTexture('/image/spark.png'),
+
+        // How long should the particles live for? Measured in seconds.
+        maxAge: 5
+    });
+
+// Create a single emitter
+    var particleEmitter = new SPE.Emitter({
+        type: 'sphere',
+        position: new THREE.Vector3(0, 0, 0),
+//        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
+//        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
+        radius: 100,  // USE WHEN type=sphere OR type=disk
+        speed: 40,  // USE WHEN type=sphere OR type=disk
+        particlesPerSecond: 100,
+        sizeStart: 30,
+        sizeEnd: 0,
+        opacityStart: 1,
+        opacityEnd: 0,
+        colorStartSpread: new THREE.Vector3(20, 100, 98),
+        colorMiddleSpread: new THREE.Vector3(67, 23, 33),
+        colorEndSpread: new THREE.Vector3(145, 178, 154),
+//        colorStart: new THREE.Color('blue'),
+//        colorMiddle: new THREE.Color( 'white' ),
+//        colorEnd: new THREE.Color('white')
+    });
+
+    // Add the emitter to the group.
+    this.particleGroup.addEmitter(particleEmitter);
+
+    this.basicScene.scene.add(this.particleGroup.mesh);
+
+    console.log('particleGroup ADDED')
+}
+
+Character.prototype.addHoverAnimation = function(){
+    // character tween animation
+    var self = this;
+
+    self.mesh.position.y = 180;
+
+    var characterAnimationOpts = {
+        range: 20,
+        duration: 1300,
+        delay: 20,
+        easing: TWEEN.Easing.Linear.None
+    };
+
+    var currentCharacterTweenAnim = {y: self.mesh.position.y -characterAnimationOpts.range};
+
+    var updateCharacterTweenAnimation = function(){
+        if(self.mesh){
+            self.mesh.position.y = currentCharacterTweenAnim.y;
+        }
+    }
+
+    var characterTweenUp = new TWEEN.Tween(currentCharacterTweenAnim)
+        .to({y: self.mesh.position.y +characterAnimationOpts.range}, characterAnimationOpts.duration)
+        .delay(characterAnimationOpts.delay)
+        .easing(characterAnimationOpts.easing)
+        .onUpdate(updateCharacterTweenAnimation);
+
+    // build the tween to go backward
+    var characterTweenDown = new TWEEN.Tween(currentCharacterTweenAnim)
+        .to({y: self.mesh.position.y -characterAnimationOpts.range}, characterAnimationOpts.duration)
+        .delay(characterAnimationOpts.delay)
+        .easing(characterAnimationOpts.easing)
+        .onUpdate(updateCharacterTweenAnimation);
+
+    // after characterTweenUp do characterTweenDown
+    characterTweenUp.chain(characterTweenDown);
+
+    // after characterTweenDown do characterTweenUp, so it is cycling
+    characterTweenDown.chain(characterTweenUp);
+
+    characterTweenUp.start();
+    // END  character tween animation
 }
 
 
@@ -174,7 +256,10 @@ Character.prototype.motion = function () {
 //    }
 
     // Update the directions if we intersect with an obstacle
-    this.collision();
+//    this.collision();
+
+
+
     // If we're not static
     if (this.direction.x !== 0 || this.direction.z !== 0) {
         // Rotate the character
@@ -215,10 +300,11 @@ Character.prototype.rotate = function () {
 Character.prototype.move = function () {
 //    this.mesh.position.y = 130 + Math.sin(this.step) * 8;
 
-
+    var self = this;
     // We update our Object3D's position from our "direction"
     this.mesh.position.x += this.direction.x * ((this.direction.z === 0) ? 4 : Math.sqrt(8));
     this.mesh.position.z += this.direction.z * ((this.direction.x === 0) ? 4 : Math.sqrt(8));
+
     // Now let's use Sine and Cosine curves, using our "step" property ...
     this.step += 1 / 4;
     // ... to slightly move our feet and hands
@@ -226,6 +312,7 @@ Character.prototype.move = function () {
     this.feet.right.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 16);
     this.hands.left.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 8);
     this.hands.right.position.setZ(Math.sin(this.step) * 8);
+
 }
 
 Character.prototype.collide = function () {
@@ -233,35 +320,45 @@ Character.prototype.collide = function () {
     return false;
 }
 
+Character.prototype.onTick = function(delta){
 
-Character.prototype.collision = function () {
-    var collisions, i,
-    // Maximum distance from the origin before we consider collision
-        distance = 32,
-    // Get the obstacles array from our world
-        obstacles = this.basicScene.world.getObstacles();
-    // For each ray
-    for (i = 0; i < this.rays.length; i += 1) {
-        // We reset the raycaster to this direction
-        this.caster.set(this.mesh.position, this.rays[i]);
-        // Test if we intersect with any obstacle mesh
-        collisions = this.caster.intersectObjects(obstacles);
-        // And disable that direction if we do
-        if (collisions.length > 0 && collisions[0].distance <= distance) {
-            // Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
-            if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
-                this.direction.setZ(0);
-            } else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
-                this.direction.setZ(0);
-            }
-            if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
-                this.direction.setX(0);
-            } else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
-                this.direction.setX(0);
-            }
-        }
-    }
+//    console.log('Character.prototype.onTick delta = ', delta);
+
+    // Run a new step of the user's motions
+    this.motion();
+
+    this.particleGroup.tick(delta);
 }
+
+
+//Character.prototype.collision = function () {
+//    var collisions, i,
+//    // Maximum distance from the origin before we consider collision
+//        distance = 32,
+//    // Get the obstacles array from our world
+//        obstacles = this.basicScene.world.getObstacles();
+//    // For each ray
+//    for (i = 0; i < this.rays.length; i += 1) {
+//        // We reset the raycaster to this direction
+//        this.caster.set(this.mesh.position, this.rays[i]);
+//        // Test if we intersect with any obstacle mesh
+//        collisions = this.caster.intersectObjects(obstacles);
+//        // And disable that direction if we do
+//        if (collisions.length > 0 && collisions[0].distance <= distance) {
+//            // Yep, this.rays[i] gives us : 0 => up, 1 => up-left, 2 => left, ...
+//            if ((i === 0 || i === 1 || i === 7) && this.direction.z === 1) {
+//                this.direction.setZ(0);
+//            } else if ((i === 3 || i === 4 || i === 5) && this.direction.z === -1) {
+//                this.direction.setZ(0);
+//            }
+//            if ((i === 1 || i === 2 || i === 3) && this.direction.x === 1) {
+//                this.direction.setX(0);
+//            } else if ((i === 5 || i === 6 || i === 7) && this.direction.x === -1) {
+//                this.direction.setX(0);
+//            }
+//        }
+//    }
+//}
 
 
 module.exports = Character;

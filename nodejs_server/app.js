@@ -28,7 +28,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+
+app.post('/test', function(req, res){
+    console.log('GOT POST REQUEST: req.body = ', req.body);
+});
 
 var httpServer = http.createServer(app);
 
@@ -39,3 +42,5 @@ httpServer.listen(app.get('port'), function(){
 var primusUtil =  require('./primus_util')();
 var primus = primusUtil.init(httpServer);
 primus.save('../primus.js');
+
+

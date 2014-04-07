@@ -12,6 +12,8 @@
     "browserify": "~3.32.1",
     "beefy": "~1.1.0",
     "three": "~0.66.2",
-    "websocket":"1.0.8"
-}
+    "websocket":"1.0.8",
+    "tween.js":"0.12.0"
+
+  }
 }
