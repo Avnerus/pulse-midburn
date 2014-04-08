@@ -13,15 +13,13 @@ import netP5.*;
 Serial port;     
 
 
-OscP5 oscP5;
-NetAddress myRemoteLocation;
 
 void setup() {
-  size(700, 600);  // Stage size
+  size(100, 100);  // Stage size
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("192.168.111.22",8000);
+  myRemoteLocation = new NetAddress("192.168.111.21",8000);
   
    
 // GO FIND THE ARDUINO
@@ -29,11 +27,7 @@ void setup() {
   // choose the number between the [] that is connected to the Arduino
   port = new Serial(this, Serial.list()[0], 115200);  // make sure Arduino is talking serial at this baud rate
   port.clear();            // flush buffer
-  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return
-  
-  OscMessage m = new OscMessage("/server/connect",new Object[0]);
-  oscP5.flush(m,myRemoteLocation); 
- 
+  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return  
 }
 
 void draw() {
@@ -41,6 +35,11 @@ void draw() {
 }
   
 
+void heartBeat(int bpm) {
+  println("Beat!! " + bpm);  
+  sendChordWithLength();
+
+}
 
 
 

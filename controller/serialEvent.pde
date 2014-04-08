@@ -5,8 +5,7 @@ int IBI;
 void serialEvent(Serial port){ 
    String inData = port.readStringUntil('\n');
    if (inData != null && inData.length() > 2) {          
-     inData = trim(inData);                 // cut off white space (carriage return)
-     println(inData);   
+     inData = trim(inData);                 // cut off white space (carriage return)     
      String indexData = inData.substring(0,1);     
      int SensorIndex = int(indexData);
      if (SensorIndex != 0) {
@@ -19,6 +18,7 @@ void serialEvent(Serial port){
      else if (inData.charAt(1) == 'B'){          // leading 'B' for BPM data       
        inData = inData.substring(2);        // cut off the leading 'B'
        BPM = int(inData);                   // convert the string to usable int
+       heartBeat(BPM);
        
        
        /*OscMessage myMessage = new OscMessage("/bpm");

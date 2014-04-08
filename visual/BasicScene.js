@@ -9,9 +9,11 @@ function BasicScene(){
 };
 
 BasicScene.prototype.init = function () {
-    var THREE = require('three');
+//    var THREE = require('three');
     var Character = require('./Character');
     var World = require('./World');
+
+    this.clock = new THREE.Clock();
 
     // Create a scene, a camera, a light and a WebGL renderer with Three.JS
     this.scene = new THREE.Scene();
@@ -21,25 +23,41 @@ BasicScene.prototype.init = function () {
     this.light.position.set(-256, 256, -256);
     this.scene.add(this.light);
     this.renderer = new THREE.WebGLRenderer();
+
     // Define the container for the renderer
     this.container = $('#basic-scene');
+
+
     // Create the user's character
-    this.user = new Character({
+    this.user1 = new Character({
         color: 0x7A43B6,
         basic_scene:this
     });
-    this.scene.add(this.user.mesh);
+    this.scene.add(this.user1.mesh);
+
+//    this.user2 = new Character({
+//        color: 0xFF43FF,
+//        basic_scene:this
+//    });
+//    this.scene.add(this.user2.mesh);
+
+
     // Create the "world" : a 3D representation of the place we'll be putting our character in
     this.world = new World({
         color: 0xF5F5F5
     });
     this.scene.add(this.world.mesh);
+
+
     // Define the size of the renderer
     this.setAspect();
     // Insert the renderer in the container
     this.container.prepend(this.renderer.domElement);
+
     // Set the camera to look at our user's character
-    this.setFocus(this.user.mesh);
+    this.setFocus(this.user1.mesh);
+
+
     // Start the events handlers
     this.setControls();
 }
@@ -48,7 +66,7 @@ BasicScene.prototype.setControls = function () {
     var self = this;
 
     // Within jQuery's methods, we won't be able to access "this"
-    var user = this.user;
+    var user = this.user1;
 
     // State of the different controls
     var controls = {
@@ -150,13 +168,17 @@ BasicScene.prototype.setFocus = function (object) {
 
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
-    // Run a new step of the user's motions
-    this.user.motion();
-    // Set the camera to look at our user's character
-    this.setFocus(this.user.mesh);
-    // And draw !
 
+    this.user1.onTick(this.clock.getDelta());
+
+    // Set the camera to look at our user's character
+//    this.setFocus(this.user1.mesh);
+    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
+
+    // And draw !
     this.renderer.render(this.scene, this.camera);
 }
+
+
 
 module.exports = BasicScene;
