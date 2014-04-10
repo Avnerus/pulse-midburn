@@ -18,7 +18,7 @@ void serialEvent(Serial port){
      else if (inData.charAt(1) == 'B'){          // leading 'B' for BPM data       
        inData = inData.substring(2);        // cut off the leading 'B'
        BPM = int(inData);                   // convert the string to usable int
-       heartBeat(BPM);
+       heartBeat(SensorIndex, BPM);
        
        
        /*OscMessage myMessage = new OscMessage("/bpm");
@@ -32,6 +32,7 @@ void serialEvent(Serial port){
      else if (inData.charAt(1) == 'Q'){            // leading 'Q' means IBI data        
        inData = inData.substring(2);        // cut off the leading 'Q'
        IBI = int(inData);                   // convert the string to usable int
+       ibiData(SensorIndex, IBI);
      } 
    }
 }

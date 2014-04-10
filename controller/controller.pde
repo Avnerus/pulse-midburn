@@ -10,16 +10,25 @@ import processing.serial.*;
 import oscP5.*;
 import netP5.*;
 
+int NUMBER_OF_PLAYERS = 1;
+Player[] players;
+
+
+
 Serial port;     
-
-
 
 void setup() {
   size(100, 100);  // Stage size
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("192.168.111.21",8000);
+  myRemoteLocation = new NetAddress("192.168.111.22",8000);
+  
+  players = new Player[NUMBER_OF_PLAYERS];
+  for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
+    Player player = new Player(i);
+    players[i] = player;
+  }
   
    
 // GO FIND THE ARDUINO
@@ -35,10 +44,12 @@ void draw() {
 }
   
 
-void heartBeat(int bpm) {
-  println("Beat!! " + bpm);  
-  sendChordWithLength();
+void heartBeat(int index, int bpm) {
+  players[index].beat();  
+}
 
+void ibiData(int index, int IBI) {
+  players[index].setIBI(IBI);
 }
 
 
