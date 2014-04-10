@@ -21,6 +21,17 @@ void interruptSetup(){
   OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
   TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
   sei();             // MAKE SURE GLOBAL INTERRUPTS ARE ENABLED      
+  
+  for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
+      sensorsState[i].thresh = 512;                          // set thresh default
+      sensorsState[i].P = 512;                               // set P default
+      sensorsState[i].T = 512;                               // set T default
+      sensorsState[i].lastBeatTime = 0;
+      sensorsState[i].sampleCounter = 0;      
+      sensorsState[i].amp = 100;      
+      sensorsState[i].firstBeat = true;                      // set these to avoid noise
+      sensorsState[i].secondBeat = false;                    // when we get the heartbeat back    
+  }
 } 
 
 
