@@ -72,8 +72,8 @@ void loop(){
       sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
       if (sensorsData[i].QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
             fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
-            sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
+            sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
             sensorsData[i].QS = false;                      // reset the Quantified Self flag for next time    
       }    
   }  

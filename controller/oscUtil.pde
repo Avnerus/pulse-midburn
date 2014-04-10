@@ -1,48 +1,40 @@
-  
+
 OscP5 oscP5;
 NetAddress myRemoteLocation;
-  
-void sendChordWithLength() {
-  float note = 0.5;
-  float velocity = 1.0;
-  float index = 1.0; 
-   
-  // Start
-  
-  OscBundle myBundle = new OscBundle();
-  
-  OscMessage myMessage = new OscMessage("/stroke");
-  
-  myBundle.add(myMessage);
-  myMessage.clear();
-  myMessage.setAddrPattern("/params");
-  myMessage.add(note);
-  myMessage.add(velocity);
-  myMessage.add(index);  
-  myBundle.add(myMessage);  
-  
- // float midiVal = (  int(inData) - 50) / 127.0;  
-   //    println("Sending BPM " + midiVal + " on OSC");       
-     //  myMessage.add(midiVal); /* add an int to the osc message */              
-  //oscP5.send(myMessage, myRemoteLocation);
-  oscP5.send(myBundle, myRemoteLocation);
- 
- // Stop
- velocity = 0.0;
- myBundle = new OscBundle();
- 
-  myMessage = new OscMessage("/stroke");
-  
-  myBundle.add(myMessage);
-  myMessage.clear();
-  myMessage.setAddrPattern("/params");
-  myMessage.add(note);
-  myMessage.add(velocity);
-  myMessage.add(index);  
-  myBundle.add(myMessage); 
- 
- 
- myBundle.setTimetag(myBundle.now() + 4000); 
- oscP5.send(myBundle, myRemoteLocation);
 
+void sendChordWithLength(String message, float[] notes, int chordLength) {
+  float velocity = 1.0;  
+  int on = 1;
+  int off = 0;
+
+  OscMessage paramsMsg = new OscMessage("/params");
+  OscMessage noteMsg = new OscMessage("/" + message);
+
+  OscBundle startBundle = new OscBundle();
+  OscBundle stopBundle = new OscBundle();
+
+  // Start
+  for (int i = 0; i < notes.length; i++) {
+    paramsMsg.clear();
+    paramsMsg.setAddrPattern("/params" + i);
+    paramsMsg.add(notes[i]);
+    paramsMsg.add(velocity);
+    paramsMsg.add(i);
+    startBundle.add(paramsMsg);
+    stopBundle.add(paramsMsg);
+
+    noteMsg.clear();
+    noteMsg.setAddrPattern("/" + message + "-" + i);
+    noteMsg.add(on);
+    startBundle.add(noteMsg);
+
+    noteMsg.clear();
+    noteMsg.setAddrPattern("/" + message + "-" + i);
+    noteMsg.add(off);    
+    stopBundle.add(noteMsg);
+  }
+  stopBundle.setTimetag(stopBundle.now() + chordLength);
+  oscP5.send(startBundle, myRemoteLocation);
+  oscP5.send(stopBundle, myRemoteLocation);
 }
+
