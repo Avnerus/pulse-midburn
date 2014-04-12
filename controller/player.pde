@@ -2,6 +2,7 @@ class Player {
   
   int _IBI;
   int _index;
+  boolean _isBass;
   
   
   Player(int index) {
@@ -10,8 +11,9 @@ class Player {
   
   void beat() {
      println("Player" + _index + " beats");
-     float[] chord = {0.3,0.32,0.34};
-     float[] chord2 = {0.4,0.5,0.60};
+     int[] chord = {36};
+//     int[] chord2 = {50,57,62};
+    int[] chord2 = {random(48, 61)};
      sendChordWithLength("beat1", chord, _IBI);
      sendChordWithLength("synth1",chord2, _IBI);
   }
