@@ -31,7 +31,8 @@ BasicScene.prototype.init = function () {
     // Create the user's character
     this.user1 = new Character({
         color: 0x7A43B6,
-        basic_scene:this
+        basic_scene:this,
+        id:0
     });
     this.scene.add(this.user1.mesh);
 

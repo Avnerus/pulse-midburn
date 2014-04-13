@@ -7,6 +7,7 @@
 //var THREE = require('three');
 var TWEEN = require('tween.js');
 
+
 function Character(args){
     this.init(args);
 };
@@ -14,6 +15,11 @@ function Character(args){
 Character.prototype.init = function (args) {
 
     this.basicScene = args.basic_scene;
+    this.id = args.id;
+
+    console.log('Character init: id = ', this.id);
+
+    this.eventEmitter = require('./events_util').getEventEmitter();
 
     // Set the different geometries composing the humanoid
     var head = new THREE.SphereGeometry(32, 8, 8),
@@ -144,7 +150,16 @@ Character.prototype.init = function (args) {
 
     this.addHoverAnimation();
 
-    this.fireParticles();
+
+    var self = this;
+    this.eventEmitter.on('fire_particles', function(args){
+        console.log('character on fire_particles, args = ', args);
+
+        if(args.id == self.id){
+            console.log('FIRING!!!!');
+            self.fireParticles();
+        }
+    })
 }
 
 Character.prototype.fireParticles = function(){
@@ -328,9 +343,13 @@ Character.prototype.onTick = function(delta){
     // Run a new step of the user's motions
     this.motion();
 
-    this.particleEmitter.position = this.mesh.position;
+    if(this.particleEmitter){
+        this.particleEmitter.position = this.mesh.position;
+    }
 
-    this.particleGroup.tick(delta);
+    if(this.particleGroup){
+        this.particleGroup.tick(delta);
+    }
 }
 
 
