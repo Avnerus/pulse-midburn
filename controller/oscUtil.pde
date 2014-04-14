@@ -2,8 +2,8 @@
 OscP5 oscP5;
 NetAddress myRemoteLocation;
 
-void sendChordWithLength(String message, float[] notes, int chordLength) {
-  float velocity = 1.0;  
+void sendChordWithLength(String message, int[] notes, int chordLength) {
+  int velocity = 127;
   int on = 1;
   int off = 0;
 

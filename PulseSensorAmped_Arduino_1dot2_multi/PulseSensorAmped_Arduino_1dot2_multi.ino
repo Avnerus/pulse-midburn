@@ -43,7 +43,7 @@ int fadePin = 5;                  // pin to do fancy classy fading blink at each
 int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
 
 
-typedef struct {
+typedef volatile struct {
   // these variables are volatile because they are used during the interrupt service routine!
   volatile int BPM;                   // used to hold the pulse rate
   volatile int Signal;                // holds the incoming raw data
@@ -59,6 +59,16 @@ void setup(){
   pinMode(blinkPin,OUTPUT);         // pin that will blink to your heartbeat!
   pinMode(fadePin,OUTPUT);          // pin that will fade to your heartbeat!
   Serial.begin(115200);             // we agree to talk fast!
+  
+  for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
+    sensorsData[i].BPM = 0;               
+    sensorsData[i].Signal = 0;            
+    sensorsData[i].IBI = 600; 
+    sensorsData[i].Pulse = false;
+    sensorsData[i].QS = false;
+  }
+  
+  
   interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS 
    // UN-COMMENT THE NEXT LINE IF YOU ARE POWERING The Pulse Sensor AT LOW VOLTAGE, 
    // AND APPLY THAT VOLTAGE TO THE A-REF PIN
@@ -71,7 +81,7 @@ void loop(){
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
       sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
       if (sensorsData[i].QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
-            fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
+        //    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
             sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
             sensorsData[i].QS = false;                      // reset the Quantified Self flag for next time    

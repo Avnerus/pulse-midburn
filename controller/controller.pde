@@ -10,9 +10,8 @@ import processing.serial.*;
 import oscP5.*;
 import netP5.*;
 
-int NUMBER_OF_PLAYERS = 1;
+int NUMBER_OF_PLAYERS = 2;
 Player[] players;
-
 
 
 Serial port;     

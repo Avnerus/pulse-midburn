@@ -8,10 +8,7 @@ void serialEvent(Serial port){
      inData = trim(inData);                 // cut off white space (carriage return)     
      String indexData = inData.substring(0,1);     
      int SensorIndex = int(indexData);
-     if (SensorIndex == 1) {
-       println(inData);
-     }
-    if (SensorIndex != 0) return; 
+  
      if (inData.charAt(1) == 'S'){          // leading 'S' for sensor data
        inData = inData.substring(2);        // cut off the leading 'S'
        Sensor = int(inData);                // convert the string to usable int
