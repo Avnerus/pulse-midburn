@@ -168,20 +168,19 @@ Character.prototype.fireParticles = function(){
     this.particleGroup = new SPE.Group({
         // Give the particles in this group a texture
         texture: THREE.ImageUtils.loadTexture('/image/spark.png'),
-
-        // How long should the particles live for? Measured in seconds.
-        maxAge: 5
+        maxAge: 3 // How long should the particles live for? Measured in seconds.
     });
 
 // Create a single emitter
     this.particleEmitter = new SPE.Emitter({
+        duration: 3,// in seconds
         type: 'sphere',
         position: new THREE.Vector3(self.mesh.position.x, self.mesh.position.y, self.mesh.position.z),
 //        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
 //        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
-        radius: 100,  // USE WHEN type=sphere OR type=disk
+        radius: 55,  // USE WHEN type=sphere OR type=disk
         speed: 80,  // USE WHEN type=sphere OR type=disk
-        particlesPerSecond: 100,
+        particlesPerSecond: 200,
         sizeStart: 30,
         sizeEnd: 0,
         opacityStart: 1,
@@ -199,7 +198,11 @@ Character.prototype.fireParticles = function(){
 
     this.basicScene.scene.add(this.particleGroup.mesh);
 
-    console.log('particleGroup ADDED')
+    console.log('particleGroup ADDED');
+
+//    setTimeout(function(){
+//        self.basicScene.scene.remove(self.particleGroup.mesh);
+//    }, 3100);
 }
 
 Character.prototype.addHoverAnimation = function(){
