@@ -37,10 +37,14 @@ var httpServer = http.createServer(app);
 
 httpServer.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
+
+    var primusUtil =  require('./primus_util')();
+    var primus = primusUtil.init(httpServer);
+    primus.save('../primus.js');
 });
 
-var primusUtil =  require('./primus_util')();
-var primus = primusUtil.init(httpServer);
-primus.save('../primus.js');
 
 
+
+// routes
+require('./routes/beat')(app);

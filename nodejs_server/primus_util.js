@@ -13,18 +13,15 @@ module.exports = function() {
 
 module.exports.PrimusUtil = PrimusUtil;
 
-
 function PrimusUtil() {
-    // protect against people who forget 'new'
     if (!(this instanceof PrimusUtil)) return new PrimusUtil()
 }
 
-//'browserchannel'
-//engine.io
 PrimusUtil.prototype.init = function(httpServer) {
+    console.log('PrimusUtil init...');
+
     primusServer = new Primus(httpServer, {
         transformer: 'websockets'
-//        timeout:false
     });
 
 
@@ -36,11 +33,11 @@ PrimusUtil.prototype.init = function(httpServer) {
         });
 
 //        spark.write('Hello world');
-
     });
 
 
     primusServer.on('disconnection', function (spark) {
+        console.log('PRIMUS SERVER ON DISCONNECTION ');
         // the spark that disconnected
     });
 
@@ -48,15 +45,7 @@ PrimusUtil.prototype.init = function(httpServer) {
     return primusServer;
 }
 
-PrimusUtil.prototype.getServer = function() {
+module.exports.getServer = function() {
     return primusServer;
 }
 
-
-
-//setTimeout(function(){
-//    console.log('PRIMUS SERVER SENDING...');
-//    primusServer.write({
-//       message:'hello primus'
-//    });
-//}, 10000)
