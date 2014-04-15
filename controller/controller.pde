@@ -13,6 +13,17 @@ import netP5.*;
 int NUMBER_OF_PLAYERS = 2;
 Player[] players;
 
+// Possible musical roles
+public static final int BASS_ROLE = 0;
+public static final int AMBIENT_ROLE = 1;
+public static final int LEAD_ROLE = 2;
+int[] initialRoles = {BASS_ROLE, AMBIENT_ROLE, LEAD_ROLE, LEAD_ROLE};
+
+// The current scale
+int[] CURRENT_SCALE;
+
+
+BeatSimulator beatSim2;
 
 Serial port;     
 
@@ -25,26 +36,33 @@ void setup() {
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
-    Player player = new Player(i);
+    Player player = new Player(i, initialRoles[i]);
     players[i] = player;
   }
-  
+   
    
 // GO FIND THE ARDUINO
   println(Serial.list());    // print a list of available serial ports
   // choose the number between the [] that is connected to the Arduino
   port = new Serial(this, Serial.list()[0], 115200);  // make sure Arduino is talking serial at this baud rate
   port.clear();            // flush buffer
-  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return  
+  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return
+  
+  CURRENT_SCALE = SCALES[0];
+  
+  
+  // Beat simulators
+  beatSim2 = new BeatSimulator(2, 930, 64);
+  //beatSim2.start();    
 }
 
 void draw() {
-  
+  beatSim2.update();
 }
   
 
 void heartBeat(int index, int bpm) {
-  players[index].beat();  
+  players[index].beat(bpm);  
 }
 
 void ibiData(int index, int IBI) {

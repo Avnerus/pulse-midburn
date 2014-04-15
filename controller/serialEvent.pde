@@ -5,7 +5,7 @@ int IBI;
 void serialEvent(Serial port){ 
    String inData = port.readStringUntil('\n');
    if (inData != null && inData.length() > 2) {          
-     inData = trim(inData);                 // cut off white space (carriage return)     
+     inData = trim(inData);                 // cut off white space (carriage return)
      String indexData = inData.substring(0,1);     
      int SensorIndex = int(indexData);
   
@@ -32,7 +32,9 @@ void serialEvent(Serial port){
      else if (inData.charAt(1) == 'Q'){            // leading 'Q' means IBI data        
        inData = inData.substring(2);        // cut off the leading 'Q'
        IBI = int(inData);                   // convert the string to usable int
-       ibiData(SensorIndex, IBI);
+       if (IBI >= 450) {
+         ibiData(SensorIndex, IBI);
+       }       
      } 
    }
 }
