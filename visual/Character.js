@@ -16,6 +16,7 @@ Character.prototype.init = function (args) {
 
     this.basicScene = args.basic_scene;
     this.id = args.id;
+    this.color = args.color;
 
     console.log('Character init: id = ', this.id);
 
@@ -25,32 +26,22 @@ Character.prototype.init = function (args) {
     var head = new THREE.SphereGeometry(32, 8, 8),
         hand = new THREE.SphereGeometry(8, 4, 4),
         foot = new THREE.SphereGeometry(16, 4, 4, 0, Math.PI * 2, 0, Math.PI / 2),
-        nose = new THREE.SphereGeometry(4, 4, 4),
-    // Set the material, the "skin"
-        material = new THREE.MeshLambertMaterial(args);
+        nose = new THREE.SphereGeometry(4, 4, 4);
 
-    // Set the character modelisation object
-    this.mesh = new THREE.Object3D();
-    this.mesh.position.y = 48;
-
-    // Set the rays : one vector for every potential direction
-    this.rays = [
-        new THREE.Vector3(0, 0, 1),
-        new THREE.Vector3(1, 0, 1),
-        new THREE.Vector3(1, 0, 0),
-        new THREE.Vector3(1, 0, -1),
-        new THREE.Vector3(0, 0, -1),
-        new THREE.Vector3(-1, 0, -1),
-        new THREE.Vector3(-1, 0, 0),
-        new THREE.Vector3(-1, 0, 1)
-    ];
-    this.caster = new THREE.Raycaster();
-
-
-    // adding simple-glow
     var geometry = new THREE.SphereGeometry(30, 32, 16);
-    var material = new THREE.MeshLambertMaterial({color: 0x000088});
-    this.mesh = new THREE.Mesh(geometry, material);
+    var material = Physijs.createMaterial(
+        new THREE.MeshLambertMaterial({color: this.color}),
+        .8, // high friction
+        .4 // low restitution
+    );
+
+//    this.mesh = new THREE.Mesh(geometry, material);
+    this.mesh = new Physijs.BoxMesh(
+        geometry,
+        material,
+        0 // mass
+    );
+
     this.mesh.position.set(0, 40 ,0);
 
 
@@ -71,65 +62,61 @@ Character.prototype.init = function (args) {
 //    // end - adding simple-glow
 
 
-    // Particles
-    // use sprite because it appears the same from all angles
-//    var particleTexture = THREE.ImageUtils.loadTexture( '/image/spark.png' );
-//    var particleGroup = new THREE.Object3D();
-//    var particleAttributes = { startSize: [], startPosition: [], randomness: [] };
-//
-//    var totalParticles = 200;
-//    var radiusRange = 50;
-//
-//    for( var i = 0; i < totalParticles; i++ )
-//    {
-//        var spriteMaterial = new THREE.SpriteMaterial( { map: particleTexture, useScreenCoordinates: false, color: 0xffffff } );
-//
-//        var sprite = new THREE.Sprite( spriteMaterial );
-//        sprite.scale.set( 32, 32, 1.0 ); // imageWidth, imageHeight
-//        sprite.position.set( Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5 );
-//        // for a cube:
-//        // sprite.position.multiplyScalar( radiusRange );
-//        // for a solid sphere:
-//        // sprite.position.setLength( radiusRange * Math.random() );
-//        // for a spherical shell:
-//        sprite.position.setLength( radiusRange * (Math.random() * 0.1 + 0.9) );
-//
-//        // sprite.color.setRGB( Math.random(),  Math.random(),  Math.random() );
-//        sprite.material.color.setHSL( Math.random(), 0.9, 0.7 );
-//
-//        // sprite.opacity = 0.80; // translucent particles
-//        sprite.material.blending = THREE.AdditiveBlending; // "glowing" particles
-//
-//        particleGroup.add( sprite );
-//        // add variable qualities to arrays, if they need to be accessed later
-//        particleAttributes.startPosition.push( sprite.position.clone() );
-//        particleAttributes.randomness.push( Math.random() );
-//    }
-//
-//    particleGroup.position.y = 50;
-//    this.mesh.add(particleGroup); // this centers the glow at the mesh
-    // end - particles
+    this.head = new Physijs.SphereMesh(
+        head,
+        material,
+        0 // mass
+    );
 
-    // Set and add its head
-    this.head = new THREE.Mesh(head, material);
     this.head.position.y = 0;
     this.mesh.add(this.head);
+
     // Set and add its hands
+//    this.hands = {
+//        left: new THREE.Mesh(hand, material),
+//        right: new THREE.Mesh(hand, material)
+//    };
+
     this.hands = {
-        left: new THREE.Mesh(hand, material),
-        right: new THREE.Mesh(hand, material)
+        left: new Physijs.SphereMesh(
+            hand,
+            material,
+            0 // mass
+        ),
+        right: new Physijs.SphereMesh(
+            hand,
+            material,
+            0 // mass
+        )
     };
+
+
     this.hands.left.position.x = -40;
     this.hands.left.position.y = -8;
     this.hands.right.position.x = 40;
     this.hands.right.position.y = -8;
     this.mesh.add(this.hands.left);
     this.mesh.add(this.hands.right);
+
     // Set and add its feet
+//    this.feet = {
+//        left: new THREE.Mesh(foot, material),
+//        right: new THREE.Mesh(foot, material)
+//    };
+
     this.feet = {
-        left: new THREE.Mesh(foot, material),
-        right: new THREE.Mesh(foot, material)
+        left: new Physijs.SphereMesh(
+            foot,
+            material,
+            0 // mass
+        ),
+        right: new Physijs.SphereMesh(
+            foot,
+            material,
+            0 // mass
+        )
     };
+
     this.feet.left.position.x = -20;
     this.feet.left.position.y = -48;
     this.feet.left.rotation.y = Math.PI / 4;
@@ -138,8 +125,15 @@ Character.prototype.init = function (args) {
     this.feet.right.rotation.y = Math.PI / 4;
     this.mesh.add(this.feet.left);
     this.mesh.add(this.feet.right);
+
     // Set and add its nose
-    this.nose = new THREE.Mesh(nose, material);
+//    this.nose = new THREE.Mesh(nose, material);
+
+    this.nose = new Physijs.SphereMesh(
+        nose,
+        material,
+        0 // mass
+    )
     this.nose.position.y = 0;
     this.nose.position.z = 32;
     this.mesh.add(this.nose);
@@ -148,15 +142,16 @@ Character.prototype.init = function (args) {
     // Set the current animation step
     this.step = 0;
 
-    this.addHoverAnimation();
+    this.mesh.position.y = 200;
 
+//    this.addHoverAnimation();
 
     var self = this;
     this.eventEmitter.on('fire_particles', function(args){
         console.log('character on fire_particles, args = ', args);
 
         if(args.id == self.id){
-            console.log('FIRING!!!!');
+            console.log('Character id: ', self.id, '  FIRING!!!!');
             self.fireParticles();
         }
     })
@@ -197,12 +192,6 @@ Character.prototype.fireParticles = function(){
     this.particleGroup.addEmitter(this.particleEmitter);
 
     this.basicScene.scene.add(this.particleGroup.mesh);
-
-    console.log('particleGroup ADDED');
-
-//    setTimeout(function(){
-//        self.basicScene.scene.remove(self.particleGroup.mesh);
-//    }, 3100);
 }
 
 Character.prototype.addHoverAnimation = function(){
@@ -355,6 +344,22 @@ Character.prototype.onTick = function(delta){
     }
 }
 
+
+Character.prototype.applyForce = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
+    var force = {
+        x:forceX,
+        y:forceY,
+        z:forceZ
+    }
+
+    var offset = {
+        x:offserX,
+        y:offsetY,
+        z:offsetZ
+    }
+
+    this.mesh.applyForce(forceX, offset);
+}
 
 //Character.prototype.collision = function () {
 //    var collisions, i,

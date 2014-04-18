@@ -16,12 +16,30 @@ BasicScene.prototype.init = function () {
     this.clock = new THREE.Clock();
 
     // Create a scene, a camera, a light and a WebGL renderer with Three.JS
-    this.scene = new THREE.Scene();
+//    this.scene = new THREE.Scene();
+
+    this.scene = new Physijs.Scene;
+    this.scene.setGravity(new THREE.Vector3( 0, 0, 0));
+
+    var self = this;
+    this.scene.addEventListener(
+        'update',
+        function() {
+            self.scene.simulate(undefined, 2);
+        }
+    );
+
     this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 10000);
     this.scene.add(this.camera);
-    this.light = new THREE.PointLight();
-    this.light.position.set(-256, 256, -256);
-    this.scene.add(this.light);
+
+    this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
+    this.hemisphereLight.position.set(0, 256, 0);
+    this.scene.add(this.hemisphereLight);
+
+    this.pointLight = new THREE.PointLight();
+    this.pointLight.position.set(-256, 256, 0);
+    this.scene.add(this.pointLight);
+
     this.renderer = new THREE.WebGLRenderer();
 
     // Define the container for the renderer
@@ -30,17 +48,19 @@ BasicScene.prototype.init = function () {
 
     // Create the user's character
     this.user1 = new Character({
-        color: 0x7A43B6,
+        color: 0x000088,
         basic_scene:this,
         id:0
     });
-    this.scene.add(this.user1.mesh);
 
-//    this.user2 = new Character({
-//        color: 0xFF43FF,
-//        basic_scene:this
-//    });
-//    this.scene.add(this.user2.mesh);
+    this.user2 = new Character({
+        color: 0x7A43B6,
+        basic_scene:this,
+        id:1
+    });
+
+    this.scene.add(this.user1.mesh);
+    this.scene.add(this.user2.mesh);
 
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
@@ -56,11 +76,19 @@ BasicScene.prototype.init = function () {
     this.container.prepend(this.renderer.domElement);
 
     // Set the camera to look at our user's character
-    this.setFocus(this.user1.mesh);
+//    this.setFocus(this.user1.mesh);
 
+    this.user2.mesh.position.x = this.user1.mesh.position.x + 120;
 
     // Start the events handlers
     this.setControls();
+
+
+//    this.user1.applyForce(0, 0, 1, 0, 0, 0);
+
+
+    // telling Physijs to start working
+    this.scene.simulate();
 }
 
 BasicScene.prototype.setControls = function () {
@@ -170,12 +198,18 @@ BasicScene.prototype.setFocus = function (object) {
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
 
+    var w = this.container.width();
+    var h = jQuery(window).height() - this.container.offset().top - 20;
+
     this.user1.onTick(this.clock.getDelta());
+
+    this.user2.onTick(this.clock.getDelta());
 
     // Set the camera to look at our user's character
 //    this.setFocus(this.user1.mesh);
-    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
+//    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
 
+    this.camera.position.set(0 , h / 3, 600);
     // And draw !
     this.renderer.render(this.scene, this.camera);
 }
