@@ -10,7 +10,7 @@ import processing.serial.*;
 import oscP5.*;
 import netP5.*;
 
-int NUMBER_OF_PLAYERS = 2;
+int NUMBER_OF_PLAYERS = 3;
 Player[] players;
 
 // Possible musical roles
