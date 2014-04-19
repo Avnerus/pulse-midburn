@@ -106,7 +106,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="363.03662"
+     inkscape:cx="365.89376"
      inkscape:cy="578.64749"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -125,7 +125,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -757,7 +757,7 @@
        id="text4337"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
-         id="tspan4339"></tspan></text>
+         id="tspan4339" /></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 14.142136,270.50411 C 163.64471,11.905061 741.45197,9.8847558 741.45197,9.8847558"
@@ -778,7 +778,7 @@
          sodipodi:role="line"
          id="tspan4371"
          x="76.771599"
-         y="71.504059">בד הצללה</tspan></text>
+         y="71.504059">Shade</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"

@@ -49,9 +49,16 @@ class Player {
       sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);
     }
     else if (_role == LEAD_ROLE) {      
-      int[] chord2 = {CURRENT_SCALE[0] + AMBIENT_OCTAVE};
-      sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);
-    }       
+      // Freq change
+      int freq = int(random(50,65));
+      sendPrg("freq3", freq);
+      
+      // lead note
+      int note = CURRENT_SCALE[LEAD_PROG[int(random(0, LEAD_PROG.length))]] + LEAD_OCTAVE;
+      int note2 = CURRENT_SCALE[LEAD_PROG[int(random(0, LEAD_PROG.length))]] + LEAD_OCTAVE;                
+      int[] chord = {note, note2};     
+      sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
+    }
   }
   
   void setIBI(int ibi) {

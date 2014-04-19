@@ -24,6 +24,7 @@ int[] CURRENT_SCALE;
 
 
 BeatSimulator beatSim2;
+BeatSimulator beatSim1;
 
 Serial port;     
 
@@ -52,11 +53,14 @@ void setup() {
   
   
   // Beat simulators
-  beatSim2 = new BeatSimulator(2, 930, 64);
-  //beatSim2.start();    
+  beatSim1 = new BeatSimulator(0, 930, 64);  
+  beatSim2 = new BeatSimulator(1, 930, 64);  
+  beatSim1.start();
+  beatSim2.start();    
 }
 
 void draw() {
+  beatSim1.update();
   beatSim2.update();
 }
   
