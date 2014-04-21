@@ -21,9 +21,9 @@ void sendChordWithLength(String message, int[] notes, int chordLength) {
     paramsMsg.add(velocity);
     paramsMsg.add(i);
     startBundle.add(paramsMsg);
-    stopBundle.add(paramsMsg);
+    stopBundle.add(paramsMsg);   
 
-    noteMsg.clear();
+    noteMsg.clear();    
     noteMsg.setAddrPattern("/" + message + "-" + i);
     noteMsg.add(on);
     startBundle.add(noteMsg);
