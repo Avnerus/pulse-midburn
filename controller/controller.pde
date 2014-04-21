@@ -10,21 +10,26 @@ import processing.serial.*;
 import oscP5.*;
 import netP5.*;
 
-int NUMBER_OF_PLAYERS = 3;
+int NUMBER_OF_PLAYERS = 4;
 Player[] players;
 
 // Possible musical roles
 public static final int BASS_ROLE = 0;
 public static final int AMBIENT_ROLE = 1;
 public static final int LEAD_ROLE = 2;
-int[] initialRoles = {BASS_ROLE, AMBIENT_ROLE, LEAD_ROLE, LEAD_ROLE};
+public static final int VOICE_ROLE = 3;
+
+
+int[] initialRoles = {BASS_ROLE, AMBIENT_ROLE, LEAD_ROLE, VOICE_ROLE};
 
 // The current scale
 int[] CURRENT_SCALE;
 
 
-BeatSimulator beatSim2;
 BeatSimulator beatSim1;
+BeatSimulator beatSim2;
+BeatSimulator beatSim3;
+BeatSimulator beatSim4;
 
 Serial port;     
 
@@ -54,14 +59,21 @@ void setup() {
   
   // Beat simulators
   beatSim1 = new BeatSimulator(0, 930, 64);  
-  beatSim2 = new BeatSimulator(1, 930, 64);  
-  beatSim1.start();
-  beatSim2.start();    
+  beatSim2 = new BeatSimulator(1, 1200, 62);  
+  beatSim3 = new BeatSimulator(2, 850, 70);
+  beatSim4 = new BeatSimulator(3, 1000, 60);
+  
+  beatSim1.start();   
+  beatSim2.start();
+  beatSim3.start();
+  beatSim4.start();  
 }
 
 void draw() {
   beatSim1.update();
   beatSim2.update();
+  beatSim3.update();
+  beatSim4.update();  
 }
   
 
@@ -72,6 +84,7 @@ void heartBeat(int index, int bpm) {
 void ibiData(int index, int IBI) {
   players[index].setIBI(IBI);
 }
+
 
 
 
