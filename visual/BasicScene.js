@@ -12,6 +12,9 @@ BasicScene.prototype.init = function () {
 //    var THREE = require('three');
     var Character = require('./Character');
     var World = require('./World');
+    this.renderer = new THREE.WebGLRenderer();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+
 
     this.clock = new THREE.Clock();
 
@@ -19,7 +22,7 @@ BasicScene.prototype.init = function () {
 //    this.scene = new THREE.Scene();
 
     this.scene = new Physijs.Scene;
-    this.scene.setGravity(new THREE.Vector3( 0, 0, 0));
+    this.scene.setGravity(new THREE.Vector3(0, -100, 0));
 
     var self = this;
     this.scene.addEventListener(
@@ -29,7 +32,13 @@ BasicScene.prototype.init = function () {
         }
     );
 
-    this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 10000);
+    console.log(window.innerWidth + " * " + window.innerHeight);
+//    console.log(this.renderer.domElement.attr('width') + " * " + this.renderer.domElement.height);
+//    console.log(this.renderer.domElement);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+    this.camera.position.set(0, 100, 700);
+//    this.camera.lookAt(this.scene.position);
     this.scene.add(this.camera);
 
     this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
@@ -40,7 +49,6 @@ BasicScene.prototype.init = function () {
     this.pointLight.position.set(-256, 256, 0);
     this.scene.add(this.pointLight);
 
-    this.renderer = new THREE.WebGLRenderer();
 
     // Define the container for the renderer
     this.container = $('#basic-scene');
@@ -50,41 +58,48 @@ BasicScene.prototype.init = function () {
     this.user1 = new Character({
         color: 0x000088,
         basic_scene:this,
-        id:0
+        id:0,
+        init_mass:1,
+        initX:0,
+        initY:40,
+        initZ:0
     });
 
     this.user2 = new Character({
         color: 0x7A43B6,
         basic_scene:this,
-        id:1
+        id:1,
+        init_mass:1,
+        initX:200,
+        initY:40,
+        initZ:0
     });
 
     this.scene.add(this.user1.mesh);
-    this.scene.add(this.user2.mesh);
+//    this.scene.add(this.user2.mesh);
 
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
     this.world = new World({
         color: 0xF5F5F5
     });
-    this.scene.add(this.world.mesh);
+    //this.scene.add(this.world.mesh);
 
 
     // Define the size of the renderer
-    this.setAspect();
+    //this.setAspect();
     // Insert the renderer in the container
     this.container.prepend(this.renderer.domElement);
 
-    // Set the camera to look at our user's character
-//    this.setFocus(this.user1.mesh);
-
-    this.user2.mesh.position.x = this.user1.mesh.position.x + 120;
 
     // Start the events handlers
     this.setControls();
 
 
-//    this.user1.applyForce(0, 0, 1, 0, 0, 0);
+    //this.user1.applyForce(0, 0, 0, this.user1.mesh.position.x, this.user1.mesh.position.y, this.user1.mesh.position.z);
+
+    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
+
 
 
     // telling Physijs to start working
@@ -191,7 +206,7 @@ BasicScene.prototype.setAspect = function () {
 
 // Updating the camera to follow and look at a given Object3D / Mesh
 BasicScene.prototype.setFocus = function (object) {
-    this.camera.position.set(object.position.x, object.position.y + 128, object.position.z - 256);
+   // this.camera.position.set(object.position.x, object.position.y + 128, object.position.z - 256);
     this.camera.lookAt(object.position);
 }
 
@@ -209,7 +224,7 @@ BasicScene.prototype.frame = function () {
 //    this.setFocus(this.user1.mesh);
 //    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
 
-    this.camera.position.set(0 , h / 3, 600);
+//    this.camera.position.set(0 , h / 3, 600);
     // And draw !
     this.renderer.render(this.scene, this.camera);
 }

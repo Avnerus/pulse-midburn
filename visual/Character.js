@@ -39,10 +39,10 @@ Character.prototype.init = function (args) {
     this.mesh = new Physijs.BoxMesh(
         geometry,
         material,
-        0 // mass
+        args.init_mass // mass
     );
 
-    this.mesh.position.set(0, 40 ,0);
+    this.mesh.position.set(args.initX, args.initY, args.initZ);
 
 
 //    // SUPER SIMPLE GLOW EFFECT
@@ -305,23 +305,23 @@ Character.prototype.rotate = function () {
     }
 }
 
-Character.prototype.move = function () {
-//    this.mesh.position.y = 130 + Math.sin(this.step) * 8;
-
-    var self = this;
-    // We update our Object3D's position from our "direction"
-    this.mesh.position.x += this.direction.x * ((this.direction.z === 0) ? 4 : Math.sqrt(8));
-    this.mesh.position.z += this.direction.z * ((this.direction.x === 0) ? 4 : Math.sqrt(8));
-
-    // Now let's use Sine and Cosine curves, using our "step" property ...
-    this.step += 1 / 4;
-    // ... to slightly move our feet and hands
-    this.feet.left.position.setZ(Math.sin(this.step) * 16);
-    this.feet.right.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 16);
-    this.hands.left.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 8);
-    this.hands.right.position.setZ(Math.sin(this.step) * 8);
-
-}
+//Character.prototype.move = function () {
+////    this.mesh.position.y = 130 + Math.sin(this.step) * 8;
+//
+//    var self = this;
+//    // We update our Object3D's position from our "direction"
+//    this.mesh.position.x += this.direction.x * ((this.direction.z === 0) ? 4 : Math.sqrt(8));
+//    this.mesh.position.z += this.direction.z * ((this.direction.x === 0) ? 4 : Math.sqrt(8));
+//
+//    // Now let's use Sine and Cosine curves, using our "step" property ...
+//    this.step += 1 / 4;
+//    // ... to slightly move our feet and hands
+//    this.feet.left.position.setZ(Math.sin(this.step) * 16);
+//    this.feet.right.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 16);
+//    this.hands.left.position.setZ(Math.cos(this.step + (Math.PI / 2)) * 8);
+//    this.hands.right.position.setZ(Math.sin(this.step) * 8);
+//
+//}
 
 Character.prototype.collide = function () {
     // INSERT SOME MAGIC HERE
@@ -342,23 +342,57 @@ Character.prototype.onTick = function(delta){
     if(this.particleGroup){
         this.particleGroup.tick(delta);
     }
+
+    if(this.isForcedApplied){
+//        this.mesh.applyForce(new THREE.Vector3(this.applyForceForce.x, this.applyForceForce.y, this.applyForceForce.z), new THREE.Vector3(this.applyForceOffset.x, this.applyForceOffset.y, this.applyForceOffset.z));
+        this.mesh.applyForce(this.applyForceForce, this.applyForceOffset);
+    }
 }
 
 
-Character.prototype.applyForce = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
-    var force = {
+Character.prototype.applyImpulse = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
+    this.applyImpulseImpulse = {
         x:forceX,
         y:forceY,
         z:forceZ
     }
 
-    var offset = {
+    this.applyImpulseOffset = {
         x:offserX,
         y:offsetY,
         z:offsetZ
     }
 
-    this.mesh.applyForce(forceX, offset);
+    this.isForcedImpulse = true;
+
+    this.mesh.applyImpulse(new THREE.Vector3(this.applyImpulseImpulse, this.applyImpulseImpulse, this.applyImpulseImpulse), new THREE.Vector3(this.applyImpulseOffset.x, this.applyImpulseOffset.y, this.applyImpulseOffset.z));
+}
+
+Character.prototype.applyForce = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
+    this.applyForceForce = {
+        x:forceX,
+        y:forceY,
+        z:forceZ
+    }
+
+    this.applyForceOffset = {
+        x:offserX,
+        y:offsetY,
+        z:offsetZ
+    }
+
+    this.isForcedApplied = true;
+
+//    this.mesh.applyForce(new THREE.Vector3(this.applyForceForce.x, this.applyForceForce.y, this.applyForceForce.z), new THREE.Vector3(this.applyForceOffset.x, this.applyForceOffset.y, this.applyForceOffset.z));
+    this.mesh.applyForce(this.applyForceForce, this.applyForceOffset);
+}
+
+Character.prototype.cancelApplyForce = function(){
+    this.isForcedApplied = false;
+}
+
+Character.prototype.cancelApplyImpulse = function(){
+    this.isForcedImpulse = false;
 }
 
 //Character.prototype.collision = function () {
