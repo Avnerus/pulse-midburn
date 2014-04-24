@@ -98,7 +98,7 @@ BasicScene.prototype.init = function () {
 
     //this.user1.applyForce(0, 0, 0, this.user1.mesh.position.x, this.user1.mesh.position.y, this.user1.mesh.position.z);
 
-    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
+//    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
 
 
 

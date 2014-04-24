@@ -1013,6 +1013,12 @@ window.Physijs = (function() {
 		}
 	};
 
+    Physijs.Mesh.prototype.setGravity = function ( gravity ) {
+        if ( this.world ) {
+            this.world.execute( 'setGravity', { id: this._physijs.id, gravity: gravity} );
+        }
+    };
+
 	// Physijs.Mesh.getAngularVelocity
 	Physijs.Mesh.prototype.getAngularVelocity = function () {
 		return this._physijs.angularVelocity;

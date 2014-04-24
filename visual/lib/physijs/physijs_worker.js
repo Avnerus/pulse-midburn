@@ -599,6 +599,11 @@ public_functions.applyForce = function ( details ) {
 	_objects[details.id].activate();
 };
 
+public_functions.setGravity = function( details ) {
+    _objects[details.id].setGravity(details.gravity);
+    _objects[details.id].activate();
+};
+
 public_functions.setAngularVelocity = function ( details ) {
 
 	_vec3_1.setX(details.x);
