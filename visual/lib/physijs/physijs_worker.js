@@ -600,10 +600,20 @@ public_functions.applyForce = function ( details ) {
 };
 
 //- added by amitos
-public_functions.setGravityMesh = function( details ) {
-    _objects[details.id].setGravity(details.gravity);
+public_functions.setGravityMesh = function ( details ) {
+
+    _vec3_1.setX(details.x);
+    _vec3_1.setY(details.y);
+    _vec3_1.setZ(details.z);
+
+    _objects[details.id].setGravity(
+        _vec3_1
+    );
     _objects[details.id].activate();
+
+    console.log('setGravityMesh: _objects[details.id] = ', _objects[details.id]);
 };
+
 
 public_functions.setAngularVelocity = function ( details ) {
 

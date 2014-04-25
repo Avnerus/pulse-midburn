@@ -77,7 +77,7 @@ BasicScene.prototype.init = function () {
     });
 
     this.scene.add(this.user1.mesh);
-//    this.scene.add(this.user2.mesh);
+    this.scene.add(this.user2.mesh);
 
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
@@ -101,7 +101,11 @@ BasicScene.prototype.init = function () {
 
 //    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
 
-//    this.user1.mesh.setGravityMesh(-100);
+    var gr1 = new THREE.Vector3(0, 0, 0);
+    this.user1.mesh.setGravityMesh(gr1);
+
+    var gr2 = new THREE.Vector3(-60, 0, -80);
+    this.user2.mesh.setGravityMesh(gr2);
 
     // telling Physijs to start working
     this.scene.simulate();
