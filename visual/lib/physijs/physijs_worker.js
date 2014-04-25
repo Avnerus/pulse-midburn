@@ -610,8 +610,6 @@ public_functions.setGravityMesh = function ( details ) {
         _vec3_1
     );
     _objects[details.id].activate();
-
-    console.log('setGravityMesh: _objects[details.id] = ', _objects[details.id]);
 };
 
 

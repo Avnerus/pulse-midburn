@@ -15,14 +15,9 @@ BasicScene.prototype.init = function () {
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
-
     this.clock = new THREE.Clock();
 
-    // Create a scene, a camera, a light and a WebGL renderer with Three.JS
-//    this.scene = new THREE.Scene();
-
     this.scene = new Physijs.Scene;
-//    this.scene.setGravity(new THREE.Vector3(0, -100, 0));
     this.scene.setGravity(new THREE.Vector3(0, 0, 0));
 
     var self = this;
@@ -34,12 +29,9 @@ BasicScene.prototype.init = function () {
     );
 
     console.log(window.innerWidth + " * " + window.innerHeight);
-//    console.log(this.renderer.domElement.attr('width') + " * " + this.renderer.domElement.height);
-//    console.log(this.renderer.domElement);
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     this.camera.position.set(0, 100, 700);
-//    this.camera.lookAt(this.scene.position);
     this.scene.add(this.camera);
 
     this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
@@ -55,6 +47,7 @@ BasicScene.prototype.init = function () {
     this.container = $('#basic-scene');
 
 
+    this.characters = [];
     // Create the user's character
     this.user1 = new Character({
         color: 0x000088,
@@ -76,8 +69,24 @@ BasicScene.prototype.init = function () {
         initZ:0
     });
 
+    this.user3 = new Character({
+        color: 0x880000,
+        basic_scene:this,
+        id:2,
+        init_mass:1,
+        initX:400,
+        initY:40,
+        initZ:0
+    });
+
+
+    this.characters.push(this.user1);
+    this.characters.push(this.user2);
+    this.characters.push(this.user3);
+
     this.scene.add(this.user1.mesh);
     this.scene.add(this.user2.mesh);
+    this.scene.add(this.user3.mesh);
 
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
@@ -104,13 +113,29 @@ BasicScene.prototype.init = function () {
     var gr1 = new THREE.Vector3(0, 0, 0);
     this.user1.mesh.setGravityMesh(gr1);
 
-    var gr2 = new THREE.Vector3(-60, 0, -80);
+    var gr2 = new THREE.Vector3(0, 0, 0);
     this.user2.mesh.setGravityMesh(gr2);
+
+    var gr3 = new THREE.Vector3(0, 0, 0);
+    this.user3.mesh.setGravityMesh(gr3);
 
     // telling Physijs to start working
     this.scene.simulate();
 
 //    var cent = this.user1.getCentroid();
+}
+
+BasicScene.prototype.getOtherCharacter = function(excludeId){
+    var arr = [];
+
+    for(var i = 0; i < this.characters.length; i++){
+        var c = this.characters[i];
+        if(c.id != excludeId){
+            arr.push(c);
+        }
+    }
+
+    return arr;
 }
 
 BasicScene.prototype.setControls = function () {

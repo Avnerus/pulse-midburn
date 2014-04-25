@@ -6,6 +6,7 @@
 
 //var THREE = require('three');
 var TWEEN = require('tween.js');
+var mathUtil = require('./math_util');
 
 
 function Character(args){
@@ -154,7 +155,53 @@ Character.prototype.init = function (args) {
             console.log('Character id: ', self.id, '  FIRING!!!!');
             self.fireParticles();
         }
-    })
+    });
+
+    this.eventEmitter.on('beat_update', function(args){
+        console.log('character on beat_update, args = ', args);
+
+        if(args.id == self.id){
+//            console.log('Character id: ', self.id, '  beat_update!!!!');
+            self.lastBeat = args.beat;
+            self.onBeatUpdate(args);
+        }
+    });
+}
+
+Character.prototype.onBeatUpdate = function(args){
+    var self = this;
+
+    var others = this.basicScene.getOtherCharacter(this.id);
+    var normProjVectors = [];
+    for(var i = 0; i < others.length; i++){
+//        var v = mathUtil.projectVector(this.mesh.position, others[i].mesh.position);
+//        var v = mathUtil.multiplyVectors(this.mesh.position, others[i].mesh.position);
+
+        var v = mathUtil.subVectors(this.mesh.position, others[i].mesh.position);
+
+        v.normalize();
+
+        if(others[i].lastBeat && self.lastBeat){
+            v.lastBeat = self.lastBeat / others[i].lastBeat
+        }else{
+            v.lastBeat = 1;
+        }
+
+        console.log('onBeatUpdate: ', 'v.lastBeat = ', v.lastBeat)
+
+        v.multiplyScalar(v.lastBeat);
+
+        console.log('onBeatUpdate: normal v = ', v.x, ' ,', v.y, ' ,', v.z)
+
+        normProjVectors.push(v);
+    }
+
+    var v = normProjVectors[0];
+    for(var i = 1; i < normProjVectors.length; i++){
+        v = mathUtil.addVectors(v, normProjVectors[i])
+    }
+
+    self.mesh.setGravityMesh(v);
 }
 
 Character.prototype.fireParticles = function(){
