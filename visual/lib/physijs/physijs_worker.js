@@ -599,7 +599,8 @@ public_functions.applyForce = function ( details ) {
 	_objects[details.id].activate();
 };
 
-public_functions.setGravity = function( details ) {
+//- added by amitos
+public_functions.setGravityMesh = function( details ) {
     _objects[details.id].setGravity(details.gravity);
     _objects[details.id].activate();
 };

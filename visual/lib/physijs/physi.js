@@ -1013,9 +1013,10 @@ window.Physijs = (function() {
 		}
 	};
 
-    Physijs.Mesh.prototype.setGravity = function ( gravity ) {
+    // Physijs.Mesh.setGravityMesh - added by amitos (dont use function name 'setGravity' - since its already taken
+    Physijs.Mesh.prototype.setGravityMesh = function ( gravity ) {
         if ( this.world ) {
-            this.world.execute( 'setGravity', { id: this._physijs.id, gravity: gravity} );
+            this.world.execute( 'setGravityMesh', { id: this._physijs.id, gravity: gravity} );
         }
     };
 

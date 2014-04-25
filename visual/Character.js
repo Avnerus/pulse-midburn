@@ -424,5 +424,23 @@ Character.prototype.cancelApplyImpulse = function(){
 //    }
 //}
 
+Character.prototype.getCentroid = function(){
+
+    var geometry = this.mesh.geometry;
+    var centroid = new THREE.Vector3();
+
+    for(var i = 0; i < geometry.vertices.length; i++) {
+        console.log('geometry.vertices[i].position = ', geometry.vertices[i].position)
+        centroid.add(geometry.vertices[i].position);
+    }
+
+    centroid.divideScalar(geometry.vertices.length);
+
+    return centroid;
+}
+
+
+
+
 
 module.exports = Character;

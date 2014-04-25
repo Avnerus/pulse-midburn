@@ -22,7 +22,8 @@ BasicScene.prototype.init = function () {
 //    this.scene = new THREE.Scene();
 
     this.scene = new Physijs.Scene;
-    this.scene.setGravity(new THREE.Vector3(0, -100, 0));
+//    this.scene.setGravity(new THREE.Vector3(0, -100, 0));
+    this.scene.setGravity(new THREE.Vector3(0, 0, 0));
 
     var self = this;
     this.scene.addEventListener(
@@ -100,10 +101,12 @@ BasicScene.prototype.init = function () {
 
 //    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
 
-
+//    this.user1.mesh.setGravityMesh(-100);
 
     // telling Physijs to start working
     this.scene.simulate();
+
+//    var cent = this.user1.getCentroid();
 }
 
 BasicScene.prototype.setControls = function () {
