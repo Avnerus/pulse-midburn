@@ -143,8 +143,6 @@ Character.prototype.init = function (args) {
     // Set the current animation step
     this.step = 0;
 
-    this.mesh.position.y = 200;
-
 //    this.addHoverAnimation();
 
     var self = this;
@@ -161,15 +159,18 @@ Character.prototype.init = function (args) {
         console.log('character on beat_update, args = ', args);
 
         if(args.id == self.id){
-//            console.log('Character id: ', self.id, '  beat_update!!!!');
             self.lastBeat = args.beat;
-            self.onBeatUpdate(args);
         }
+
+        self.onBeatUpdate();
     });
+
 }
 
-Character.prototype.onBeatUpdate = function(args){
+Character.prototype.onBeatUpdate = function(){
     var self = this;
+
+    var G = 11;
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -177,21 +178,23 @@ Character.prototype.onBeatUpdate = function(args){
 //        var v = mathUtil.projectVector(this.mesh.position, others[i].mesh.position);
 //        var v = mathUtil.multiplyVectors(this.mesh.position, others[i].mesh.position);
 
-        var v = mathUtil.subVectors(this.mesh.position, others[i].mesh.position);
+        var v = mathUtil.subVectors(others[i].mesh.position, this.mesh.position);
 
         v.normalize();
 
+        var m1m2 = 1;
         if(others[i].lastBeat && self.lastBeat){
-            v.lastBeat = self.lastBeat / others[i].lastBeat
-        }else{
-            v.lastBeat = 1;
+            m1m2 = (self.lastBeat * self.lastBeat) * (self.lastBeat)/ (others[i].lastBeat * others[i].lastBeat) * (others[i].lastBeat )
         }
+        console.log('m1m2 = ', m1m2);
 
-        console.log('onBeatUpdate: ', 'v.lastBeat = ', v.lastBeat)
+        var r = others[i].mesh.position.distanceTo(this.mesh.position);
+        console.log('r = ', r);
 
-        v.multiplyScalar(v.lastBeat);
+        var scalar = G * (m1m2 / (r * r));
+        console.log('scalar = ', scalar);
 
-        console.log('onBeatUpdate: normal v = ', v.x, ' ,', v.y, ' ,', v.z)
+        v.multiplyScalar(scalar);
 
         normProjVectors.push(v);
     }
@@ -203,6 +206,46 @@ Character.prototype.onBeatUpdate = function(args){
 
     self.mesh.setGravityMesh(v);
 }
+
+
+Character.prototype.onBeatUpdateTest = function(){
+    var self = this;
+
+    var others = this.basicScene.getOtherCharacter(this.id);
+
+
+//        var v = mathUtil.projectVector(this.mesh.position, others[i].mesh.position);
+//        var v = mathUtil.multiplyVectors(this.mesh.position, others[i].mesh.position);
+
+    var otheChar = others[0];
+    console.log('before sub: this.mesh.position = ', this.mesh.position, ' otheChar.mesh.position = ', otheChar.mesh.position);
+
+    var v = mathUtil.subVectors(otheChar.mesh.position, this.mesh.position);
+    console.log('after sub: v = ', v);
+    v.normalize();
+    console.log('after normalize: v = ', v);
+    v.multiplyScalar(10);
+
+    console.log('after multiplyScalar: v = ', v);
+
+    var otherChar2 = others[1];
+    console.log('before sub2: this.mesh.position = ', this.mesh.position, ' otherChar2.mesh.position = ', otherChar2.mesh.position);
+
+    var z = mathUtil.subVectors(otherChar2.mesh.position, this.mesh.position);
+    console.log('after sub: z = ', z);
+    z.normalize();
+    console.log('after normalize: z = ', z);
+    z.multiplyScalar(20);
+
+    console.log('after multiplyScalar: z = ', z);
+
+    var sumVec = mathUtil.addVectors(v, z);
+
+
+    self.mesh.setGravityMesh(sumVec);
+}
+
+
 
 Character.prototype.fireParticles = function(){
     var self = this;

@@ -12,18 +12,21 @@
     }
 
     module.exports.multiplyVectors = function(u, v){
-        var u1 = u.clone();
-        return u1.multiply(v);
+        var result = new THREE.Vector3();
+        result.multiplyVectors(u, v);
+        return result;
     }
 
     module.exports.subVectors = function(u, v){
-        var u1 = u.clone();
-        return u1.sub(v);
+        var result = new THREE.Vector3();
+        result.subVectors(u, v);
+        return result;
     }
 
     module.exports.addVectors = function(u, v){
-        var u1 = u.clone();
-        return u1.add(v);
+        var result = new THREE.Vector3();
+        result.addVectors(u, v);
+        return result;
     }
 
 

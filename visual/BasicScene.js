@@ -55,7 +55,7 @@ BasicScene.prototype.init = function () {
         id:0,
         init_mass:1,
         initX:0,
-        initY:40,
+        initY:200,
         initZ:0
     });
 
@@ -64,8 +64,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:1,
         init_mass:1,
-        initX:200,
-        initY:40,
+        initX:-200,
+        initY:0,
         initZ:0
     });
 
@@ -74,8 +74,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:2,
         init_mass:1,
-        initX:400,
-        initY:40,
+        initX:200,
+        initY:0,
         initZ:0
     });
 
@@ -123,6 +123,9 @@ BasicScene.prototype.init = function () {
     this.scene.simulate();
 
 //    var cent = this.user1.getCentroid();
+
+
+//    this.user1.onBeatUpdateTest()
 }
 
 BasicScene.prototype.getOtherCharacter = function(excludeId){

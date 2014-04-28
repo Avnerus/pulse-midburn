@@ -58,7 +58,7 @@ setTimeout(function(){
 
         setTimeout(function(){
 
-            var beat0 = Math.random() * (80 - 60) + 60;
+            var beat0 = 60;//Math.random() * (80 - 60) + 60;
 
             primusServer.write({
                 args:{
@@ -68,7 +68,7 @@ setTimeout(function(){
                 message:'beat_update'
             });
 
-            var interval = Math.random() * (1100 - 600) + 600;
+            var interval = Math.random() * (1200 - 800) + 600;
             testBeats(interval);
         }, interval)
     }
@@ -83,7 +83,7 @@ setTimeout(function(){
         interval || 1000;
 
         setTimeout(function(){
-            var beat1 = Math.random() * (80 - 60) + 60;
+            var beat1 = 70;//Math.random() * (80 - 60) + 60;
 
             primusServer.write({
                 args:{
@@ -93,7 +93,7 @@ setTimeout(function(){
                 message:'beat_update'
             });
 
-            var interval = Math.random() * (1100 - 600) + 600;
+            var interval = Math.random() * (1200 - 800) + 600;
             testBeats(interval);
         }, interval)
     }
@@ -108,7 +108,7 @@ setTimeout(function(){
         interval || 1000;
 
         setTimeout(function(){
-            var beat2 = Math.random() * (80 - 60) + 60;
+            var beat2 = 80;//Math.random() * (80 - 60) + 60;
 
             primusServer.write({
                 args:{
@@ -118,7 +118,7 @@ setTimeout(function(){
                 message:'beat_update'
             });
 
-            var interval = Math.random() * (1100 - 600) + 600;
+            var interval = Math.random() * (1200 - 800) + 600;
             testBeats(interval);
         }, interval)
     }
