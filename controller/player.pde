@@ -14,12 +14,12 @@ class Player {
     _lastBPM = 0;
     _steadyBPMCount = 0;
     
-    int freq = int(random(50,65));
+    _freq = 60;
     
   }
   
   void beat(int bpm) {
-     //println("Player" + index + " beats at " + bpm);
+     println("Player" + _index + " beats at " + bpm);
      
      int change = 0;
      
@@ -52,7 +52,7 @@ class Player {
           println("Bass change - changing master scale");
           CURRENT_SCALE = SCALES[newScale];
       }
-      
+          
       int[] chord = {36};
       int[] chord2 = {CURRENT_SCALE[0] + BASS_OCTAVE};
       sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
@@ -64,20 +64,26 @@ class Player {
       for (int i = 0; i < AMBIENT_CHORD.length; i++) {
           int note = CURRENT_SCALE[AMBIENT_CHORD[i]] + AMBIENT_OCTAVE;
           chord2[i] = note;        
-      }      
-      sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
-      sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);
+      }     
+      sendChordWithLength("beat" + str(_index + 1), chord, _IBI);     
+      
+      sendChordWithLength("synth" + str(_index + 1), chord2, _IBI);
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("freq3", _freq);
+      sendPrg("freq3", change * 5);
       
-      // lead note
-      int note = CURRENT_SCALE[LEAD_PROG[int(random(0, LEAD_PROG.length))]] + LEAD_OCTAVE;
-      int note2 = CURRENT_SCALE[LEAD_PROG[int(random(0, LEAD_PROG.length))]] + LEAD_OCTAVE;                
-      int note3 = CURRENT_SCALE[LEAD_PROG[int(random(0, LEAD_PROG.length))]] + LEAD_OCTAVE;                
-   
-      int[] chord = {note, note2, note3};     
+      
+      
+      // Choose a scale
+      int[] scale = SCALES[int(random(0, SCALES.length))];
+      int[] chord = new int[LEAD_PROG.length];
+
+    
+      for (int i = 0; i < AMBIENT_CHORD.length; i++) {
+        int note = scale[LEAD_PROG[i]] + LEAD_OCTAVE;
+        chord[i] = note;        
+      }      
       sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
     }     
     else if (_role == VOICE_ROLE) {
