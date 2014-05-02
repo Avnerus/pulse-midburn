@@ -6,7 +6,7 @@ int[][] SCALES =  {
   {-5, -3, -1, 0, 2, 4, 6, 7, 9, 11, 12, 14, 16, 18, 19} // G  scale
 };
 
-int[] LEAD_PROG = {0, 1, 2 , 4, 8, 9, 10, 12};
+int[] LEAD_PROG = {0, 2 , 4};
 
 int[] AMBIENT_CHORD = {0, 4, 7};
 
