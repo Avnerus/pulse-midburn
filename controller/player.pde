@@ -59,19 +59,30 @@ class Player {
       sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);
     }    
     else if (_role == AMBIENT_ROLE) {
+      sendPrg("freq2", _lastBPM);
       int[] chord = {38};
       int[] chord2 = new int[AMBIENT_CHORD.length];
-      for (int i = 0; i < AMBIENT_CHORD.length; i++) {
+      for (int i = 0; i < AMBIENT_CHORD.length -1; i++) {          
           int note = CURRENT_SCALE[AMBIENT_CHORD[i]] + AMBIENT_OCTAVE;
           chord2[i] = note;        
       }     
+      int lastNote;
+      if (change == 0 ) {
+        lastNote = CURRENT_SCALE[AMBIENT_CHORD[AMBIENT_CHORD.length - 1]] + AMBIENT_OCTAVE;
+      }  else if (change > 0) {
+        lastNote = CURRENT_SCALE[AMBIENT_RISE[int(random(0, AMBIENT_RISE.length))]] + AMBIENT_OCTAVE;
+      } else {
+        lastNote = CURRENT_SCALE[AMBIENT_FALL[int(random(0, AMBIENT_FALL.length))]] + AMBIENT_OCTAVE;
+      }
+      chord2[AMBIENT_CHORD.length -1] = lastNote;
+      
       sendChordWithLength("beat" + str(_index + 1), chord, _IBI);     
       
       sendChordWithLength("synth" + str(_index + 1), chord2, _IBI);
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("freq3", change * 5);
+      sendPrg("freq3", _lastBPM);
       
       
       
@@ -80,7 +91,7 @@ class Player {
       int[] chord = new int[LEAD_PROG.length];
 
     
-      for (int i = 0; i < AMBIENT_CHORD.length; i++) {
+      for (int i = 0; i < LEAD_PROG.length; i++) {
         int note = scale[LEAD_PROG[i]] + LEAD_OCTAVE;
         chord[i] = note;        
       }      

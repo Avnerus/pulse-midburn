@@ -64,16 +64,16 @@ void setup() {
   beatSim3 = new BeatSimulator(2, 850, 70);
   beatSim4 = new BeatSimulator(3, 1000, 60);
 //  
-//  beatSim1.start();   
+  //beatSim1.start();   
 //  beatSim2.start();
-//  beatSim3.start();
+  beatSim3.start();
 //  beatSim4.start();  
 }
 
 void draw() {
-//    beatSim1.update();
+    //beatSim1.update();
 //    beatSim2.update();
-//    beatSim3.update();
+    beatSim3.update();
 //    beatSim4.update();  
 }
   
