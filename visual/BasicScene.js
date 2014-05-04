@@ -3,6 +3,7 @@
  */
 
 'use strict';
+var mathUtil = require('./math_util');
 
 function BasicScene(){
     this.init();
@@ -30,8 +31,9 @@ BasicScene.prototype.init = function () {
 
     console.log(window.innerWidth + " * " + window.innerHeight);
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-
     this.camera.position.set(0, 100, 700);
+
+
     this.scene.add(this.camera);
 
     this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
@@ -88,6 +90,8 @@ BasicScene.prototype.init = function () {
     this.scene.add(this.user2.mesh);
     this.scene.add(this.user3.mesh);
 
+    this.createCenteroid();
+
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
     this.world = new World({
@@ -122,10 +126,16 @@ BasicScene.prototype.init = function () {
     // telling Physijs to start working
     this.scene.simulate();
 
-//    var cent = this.user1.getCentroid();
+
+    this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user1.getCentroid());
+    this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user2.getCentroid());
+    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user3.getCentroid());
+
+//    this.user3.mesh.applyForce(new THREE.Vector3(0, 1000, 0), new THREE.Vector3(200, 2000, 0));
 
 
-//    this.user1.onBeatUpdateTest()
+//    this.camera.position.set( 5, 0, 0 );
+//    this.camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 }
 
 BasicScene.prototype.getOtherCharacter = function(excludeId){
@@ -240,30 +250,85 @@ BasicScene.prototype.setAspect = function () {
 }
 
 // Updating the camera to follow and look at a given Object3D / Mesh
-BasicScene.prototype.setFocus = function (object) {
+BasicScene.prototype.setFocus = function (position) {
    // this.camera.position.set(object.position.x, object.position.y + 128, object.position.z - 256);
-    this.camera.lookAt(object.position);
+    this.camera.lookAt(position);
 }
 
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
 
-    var w = this.container.width();
-    var h = jQuery(window).height() - this.container.offset().top - 20;
+//    var w = this.container.width();
+//    var h = jQuery(window).height() - this.container.offset().top - 20;
 
     this.user1.onTick(this.clock.getDelta());
 
     this.user2.onTick(this.clock.getDelta());
 
+    this.user3.onTick(this.clock.getDelta());
+
+
     // Set the camera to look at our user's character
 //    this.setFocus(this.user1.mesh);
 //    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
+
+
+//    var pos = this.getCharactersCenter();
+    //    this.hemisphereLight.position.set(pos);
+//    this.pointLight.position.set(new THREE.Vector3(this.characters[1].mesh.position));
+//    this.camera.position.set(new THREE.Vector3(this.characters[1].mesh.position.x, this.characters[1].mesh.position.y, this.characters[1].mesh.position.z - 10));
+//    this.camera.lookAt(new THREE.Vector3(this.characters[1].mesh.position));
+
+
+    this.centeroidMesh.position = this.getCharactersCenter();
+//    console.log('this.centeroidMesh.position ', this.centeroidMesh.position)
 
 //    this.camera.position.set(0 , h / 3, 600);
     // And draw !
     this.renderer.render(this.scene, this.camera);
 }
 
+
+BasicScene.prototype.getCharactersCenter = function(){
+    var characters = this.characters;
+
+    var z = 0;
+    var position = new THREE.Vector3(0, 0, 0);
+    for(var i = 0; i < characters.length; i++){
+        position.add(characters[i].mesh.position);
+
+        if(z > characters[i].mesh.position.z){
+            z = characters[i].mesh.position.z;
+        }
+    }
+    position.divideScalar(characters.length);
+
+    position.z = z + 230;
+    return position;
+}
+
+BasicScene.prototype.createCenteroid = function(){
+    var geometry = new THREE.SphereGeometry(1, 1, 1);
+
+    var material = Physijs.createMaterial(
+        new THREE.MeshLambertMaterial({color: 0xffffff}),
+        .8, // high friction
+        .4 // low restitution
+    );
+
+//    this.mesh = new THREE.Mesh(geometry, material);
+    this.centeroidMesh = new Physijs.BoxMesh(
+        geometry,
+        material,
+        1
+    );
+
+    this.centeroidMesh.position = this.getCharactersCenter();
+
+    this.scene.add(this.centeroidMesh);
+
+    this.centeroidMesh.add(this.camera);
+}
 
 
 module.exports = BasicScene;

@@ -143,8 +143,6 @@ Character.prototype.init = function (args) {
     // Set the current animation step
     this.step = 0;
 
-//    this.addHoverAnimation();
-
     var self = this;
     this.eventEmitter.on('fire_particles', function(args){
         console.log('character on fire_particles, args = ', args);
@@ -162,7 +160,7 @@ Character.prototype.init = function (args) {
             self.lastBeat = args.beat;
         }
 
-        self.onBeatUpdate();
+//        self.onBeatUpdate();
     });
 
 }
@@ -170,7 +168,7 @@ Character.prototype.init = function (args) {
 Character.prototype.onBeatUpdate = function(){
     var self = this;
 
-    var G = 11;
+    var G = 100000;
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -184,15 +182,22 @@ Character.prototype.onBeatUpdate = function(){
 
         var m1m2 = 1;
         if(others[i].lastBeat && self.lastBeat){
-            m1m2 = (self.lastBeat * self.lastBeat) * (self.lastBeat)/ (others[i].lastBeat * others[i].lastBeat) * (others[i].lastBeat )
+            m1m2 = (self.lastBeat * self.lastBeat * self.lastBeat)/ (others[i].lastBeat * others[i].lastBeat * others[i].lastBeat )
         }
-        console.log('m1m2 = ', m1m2);
+        if(self.id == 2){
+//            console.log('m1m2 = ', m1m2);
+        }
+
 
         var r = others[i].mesh.position.distanceTo(this.mesh.position);
-        console.log('r = ', r);
+        if(self.id == 2) {
+//            console.log('r = ', r);
+        }
 
         var scalar = G * (m1m2 / (r * r));
-        console.log('scalar = ', scalar);
+        if(self.id == 2) {
+//            console.log('scalar = ', scalar);
+        }
 
         v.multiplyScalar(scalar);
 
@@ -218,26 +223,26 @@ Character.prototype.onBeatUpdateTest = function(){
 //        var v = mathUtil.multiplyVectors(this.mesh.position, others[i].mesh.position);
 
     var otheChar = others[0];
-    console.log('before sub: this.mesh.position = ', this.mesh.position, ' otheChar.mesh.position = ', otheChar.mesh.position);
+//    console.log('before sub: this.mesh.position = ', this.mesh.position, ' otheChar.mesh.position = ', otheChar.mesh.position);
 
     var v = mathUtil.subVectors(otheChar.mesh.position, this.mesh.position);
-    console.log('after sub: v = ', v);
+//    console.log('after sub: v = ', v);
     v.normalize();
-    console.log('after normalize: v = ', v);
+//    console.log('after normalize: v = ', v);
     v.multiplyScalar(10);
 
-    console.log('after multiplyScalar: v = ', v);
+//    console.log('after multiplyScalar: v = ', v);
 
     var otherChar2 = others[1];
-    console.log('before sub2: this.mesh.position = ', this.mesh.position, ' otherChar2.mesh.position = ', otherChar2.mesh.position);
+//    console.log('before sub2: this.mesh.position = ', this.mesh.position, ' otherChar2.mesh.position = ', otherChar2.mesh.position);
 
     var z = mathUtil.subVectors(otherChar2.mesh.position, this.mesh.position);
-    console.log('after sub: z = ', z);
+//    console.log('after sub: z = ', z);
     z.normalize();
-    console.log('after normalize: z = ', z);
+//    console.log('after normalize: z = ', z);
     z.multiplyScalar(20);
 
-    console.log('after multiplyScalar: z = ', z);
+//    console.log('after multiplyScalar: z = ', z);
 
     var sumVec = mathUtil.addVectors(v, z);
 
@@ -288,7 +293,7 @@ Character.prototype.addHoverAnimation = function(){
     // character tween animation
     var self = this;
 
-    self.mesh.position.y = 180;
+//    self.mesh.position.y = 180;
 
     var characterAnimationOpts = {
         range: 20,
@@ -433,57 +438,9 @@ Character.prototype.onTick = function(delta){
         this.particleGroup.tick(delta);
     }
 
-    if(this.isForcedApplied){
-//        this.mesh.applyForce(new THREE.Vector3(this.applyForceForce.x, this.applyForceForce.y, this.applyForceForce.z), new THREE.Vector3(this.applyForceOffset.x, this.applyForceOffset.y, this.applyForceOffset.z));
-        this.mesh.applyForce(this.applyForceForce, this.applyForceOffset);
-    }
+    this.onBeatUpdate();
 }
 
-
-Character.prototype.applyImpulse = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
-    this.applyImpulseImpulse = {
-        x:forceX,
-        y:forceY,
-        z:forceZ
-    }
-
-    this.applyImpulseOffset = {
-        x:offserX,
-        y:offsetY,
-        z:offsetZ
-    }
-
-    this.isForcedImpulse = true;
-
-    this.mesh.applyImpulse(new THREE.Vector3(this.applyImpulseImpulse, this.applyImpulseImpulse, this.applyImpulseImpulse), new THREE.Vector3(this.applyImpulseOffset.x, this.applyImpulseOffset.y, this.applyImpulseOffset.z));
-}
-
-Character.prototype.applyForce = function(forceX, forceY, forceZ, offserX, offsetY, offsetZ){
-    this.applyForceForce = {
-        x:forceX,
-        y:forceY,
-        z:forceZ
-    }
-
-    this.applyForceOffset = {
-        x:offserX,
-        y:offsetY,
-        z:offsetZ
-    }
-
-    this.isForcedApplied = true;
-
-//    this.mesh.applyForce(new THREE.Vector3(this.applyForceForce.x, this.applyForceForce.y, this.applyForceForce.z), new THREE.Vector3(this.applyForceOffset.x, this.applyForceOffset.y, this.applyForceOffset.z));
-    this.mesh.applyForce(this.applyForceForce, this.applyForceOffset);
-}
-
-Character.prototype.cancelApplyForce = function(){
-    this.isForcedApplied = false;
-}
-
-Character.prototype.cancelApplyImpulse = function(){
-    this.isForcedImpulse = false;
-}
 
 //Character.prototype.collision = function () {
 //    var collisions, i,
@@ -519,9 +476,11 @@ Character.prototype.getCentroid = function(){
     var geometry = this.mesh.geometry;
     var centroid = new THREE.Vector3();
 
+//    console.log('Character.prototype.getCentroid  geometry.vertices = ', geometry.vertices)
+
     for(var i = 0; i < geometry.vertices.length; i++) {
-        console.log('geometry.vertices[i].position = ', geometry.vertices[i].position)
-        centroid.add(geometry.vertices[i].position);
+//        console.log('geometry.vertices[i] = ', geometry.vertices[i])
+        centroid.add(geometry.vertices[i]);
     }
 
     centroid.divideScalar(geometry.vertices.length);
