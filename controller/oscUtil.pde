@@ -39,6 +39,7 @@ void sendChordWithLength(String message, int[] notes, int chordLength) {
 }
 
 void sendPrg(String message, int value) {
+  println("Sending " + message + " " + value);
   OscMessage prgMsg = new OscMessage(message); 
   prgMsg.add(value);    
   oscP5.send(prgMsg, myRemoteLocation);

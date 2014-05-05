@@ -35,7 +35,7 @@ Serial port;
 
 void setup() {
   println("Pulse-MidBurn Controller startig up");
-  size(100, 100);  // Stage size
+  size(600, 200);  // Stage size
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
@@ -71,10 +71,18 @@ void setup() {
 }
 
 void draw() {
+    background(204);
     beatSim1.update();
     beatSim2.update();
     beatSim3.update();
     beatSim4.update();  
+}
+
+void mouseReleased() {
+    beatSim1.onMouseReleased();
+    beatSim2.onMouseReleased();
+    beatSim3.onMouseReleased();    
+    beatSim4.onMouseReleased();    
 }
   
 

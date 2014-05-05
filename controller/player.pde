@@ -25,7 +25,7 @@ class Player {
   }
   
   void beat(int bpm) {
-     println("Player" + _index + " beats at " + bpm);
+     //println("Player" + _index + " beats at " + bpm);
      
      int change = 0;
      
@@ -33,7 +33,7 @@ class Player {
        _steadyBPMCount++;
      } else {
        // A change in BPM!
-       if (_steadyBPMCount >= 2) {
+       if (_steadyBPMCount >= 1) {
          // A meaningfull change
           change = bpm - _lastBPM;         
        } 
@@ -70,7 +70,8 @@ class Player {
       }
     }    
     else if (_role == AMBIENT_ROLE) {
-      sendPrg("freq2", _lastBPM);
+      sendPrg("beatfreq2", _lastBPM);
+      sendPrg("synthfreq2", _lastBPM - 10);      
       int[] chord = {38};
       if (_alternator %2 == 0) {
           int[] chord2 = new int[AMBIENT_CHORD.length];
@@ -96,7 +97,7 @@ class Player {
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("freq3", _lastBPM);
+      sendPrg("synthfreq3", _lastBPM - 10);
         
       if (_alternator % LEAD_PROG.length == 0) {
         // Choose a scale        
@@ -117,7 +118,7 @@ class Player {
     }
     else if (_role == VOICE_ROLE) {
       if (_alternator % 2 == 0) {
-          int[] chord = {37};          
+          int[] chord = {42};          
           sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
       } else {
          int[] chord2 = new int[VOICE_CHORD.length];
