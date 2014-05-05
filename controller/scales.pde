@@ -12,7 +12,7 @@ int[] AMBIENT_CHORD = {0, 4, 7,};// 8, 12, 14};
 int[] AMBIENT_RISE = {14,13};
 int[] AMBIENT_FALL = {10,12};
 
-int[] VOICE_CHORD = {0, 2, 4};
+int[] VOICE_PROG = {0, 2, 6, 5};
 
 
 // Ocatves
