@@ -105,10 +105,6 @@ class Player {
       // Freq change      
       sendPrg("synthfreq3", _lastBPM - 10);
         
-      if (_alternator % LEAD_PROG.length == 0) {
-        // Choose a scale        
-        _scale = SCALES[int(random(0, SCALES.length))];
-      }
                    
       /*int[] chord = new int[LEAD_PROG.length];
 
@@ -119,8 +115,10 @@ class Player {
       }     */
      
       int[] chord = new int[1];
-      chord[0] = _scale[LEAD_PROG[_alternator % LEAD_PROG.length]] + LEAD_OCTAVE;
-      sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
+      int note = CURRENT_SCALE[_alternator % CURRENT_SCALE.length] + LEAD_OCTAVE;
+      note += (8 * change);
+      chord[0] = note;
+      //sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
     }
     else if (_role == VOICE_ROLE) {
       sendPrg("synthfreq4", _lastBPM);
