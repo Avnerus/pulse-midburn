@@ -4,6 +4,7 @@
 
 'use strict';
 var mathUtil = require('./math_util');
+require('./controls/OrbitControls');
 
 function BasicScene(){
     this.init();
@@ -33,6 +34,8 @@ BasicScene.prototype.init = function () {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.set(0, 100, 700);
 
+   	var controls = new THREE.OrbitControls(this.camera );
+    //controls.target.z = 150;
 
     this.scene.add(this.camera);
 
@@ -131,11 +134,6 @@ BasicScene.prototype.init = function () {
     this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user2.getCentroid());
     this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user3.getCentroid());
 
-//    this.user3.mesh.applyForce(new THREE.Vector3(0, 1000, 0), new THREE.Vector3(200, 2000, 0));
-
-
-//    this.camera.position.set( 5, 0, 0 );
-//    this.camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 }
 
 BasicScene.prototype.getOtherCharacter = function(excludeId){
@@ -249,12 +247,6 @@ BasicScene.prototype.setAspect = function () {
     this.camera.updateProjectionMatrix();
 }
 
-// Updating the camera to follow and look at a given Object3D / Mesh
-BasicScene.prototype.setFocus = function (position) {
-   // this.camera.position.set(object.position.x, object.position.y + 128, object.position.z - 256);
-    this.camera.lookAt(position);
-}
-
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
 
@@ -267,24 +259,8 @@ BasicScene.prototype.frame = function () {
 
     this.user3.onTick(this.clock.getDelta());
 
-
-    // Set the camera to look at our user's character
-//    this.setFocus(this.user1.mesh);
-//    this.camera.position.set(this.user1.mesh.position.x, this.user1.mesh.position.y + 128, this.user1.mesh.position.z - 256);
-
-
-//    var pos = this.getCharactersCenter();
-    //    this.hemisphereLight.position.set(pos);
-//    this.pointLight.position.set(new THREE.Vector3(this.characters[1].mesh.position));
-//    this.camera.position.set(new THREE.Vector3(this.characters[1].mesh.position.x, this.characters[1].mesh.position.y, this.characters[1].mesh.position.z - 10));
-//    this.camera.lookAt(new THREE.Vector3(this.characters[1].mesh.position));
-
-
     this.centeroidMesh.position = this.getCharactersCenter();
-//    console.log('this.centeroidMesh.position ', this.centeroidMesh.position)
 
-//    this.camera.position.set(0 , h / 3, 600);
-    // And draw !
     this.renderer.render(this.scene, this.camera);
 }
 
