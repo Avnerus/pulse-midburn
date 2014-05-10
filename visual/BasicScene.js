@@ -14,6 +14,8 @@ BasicScene.prototype.init = function () {
 //    var THREE = require('three');
     var Character = require('./Character');
     var World = require('./World');
+    var StarField = require('./StarField');
+
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -31,8 +33,8 @@ BasicScene.prototype.init = function () {
     );
 
     console.log(window.innerWidth + " * " + window.innerHeight);
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(0, 100, 700);
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+    this.camera.position.set(0, 0, 50);
 
    	var controls = new THREE.OrbitControls(this.camera );
     //controls.target.z = 150;
@@ -60,8 +62,8 @@ BasicScene.prototype.init = function () {
         id:0,
         init_mass:1,
         initX:0,
-        initY:200,
-        initZ:0
+        initY:0,
+        initZ:-300
     });
 
     this.user2 = new Character({
@@ -70,8 +72,8 @@ BasicScene.prototype.init = function () {
         id:1,
         init_mass:1,
         initX:-200,
-        initY:0,
-        initZ:0
+        initY:50,
+        initZ:-300
     });
 
     this.user3 = new Character({
@@ -80,8 +82,8 @@ BasicScene.prototype.init = function () {
         id:2,
         init_mass:1,
         initX:200,
-        initY:0,
-        initZ:0
+        initY:100,
+        initZ:-300
     });
 
 
@@ -109,10 +111,6 @@ BasicScene.prototype.init = function () {
     this.container.prepend(this.renderer.domElement);
 
 
-    // Start the events handlers
-    this.setControls();
-
-
     //this.user1.applyForce(0, 0, 0, this.user1.mesh.position.x, this.user1.mesh.position.y, this.user1.mesh.position.z);
 
 //    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
@@ -126,13 +124,17 @@ BasicScene.prototype.init = function () {
     var gr3 = new THREE.Vector3(0, 0, 0);
     this.user3.mesh.setGravityMesh(gr3);
 
+
+    // Star field
+    this.starField = new StarField({scene: this.scene});
+
     // telling Physijs to start working
     this.scene.simulate();
 
 
-    this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user1.getCentroid());
-    this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user2.getCentroid());
-    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, 20), this.user3.getCentroid());
+    this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user1.getCentroid());
+    this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user2.getCentroid());
+    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user3.getCentroid());
 
 }
 
@@ -149,87 +151,6 @@ BasicScene.prototype.getOtherCharacter = function(excludeId){
     return arr;
 }
 
-BasicScene.prototype.setControls = function () {
-    var self = this;
-
-    // Within jQuery's methods, we won't be able to access "this"
-    var user = this.user1;
-
-    // State of the different controls
-    var controls = {
-        left: false,
-        up: false,
-        right: false,
-        down: false
-    };
-
-    // When the user presses a key
-    jQuery(document).keydown(function (e) {
-        var prevent = true;
-        // Update the state of the attached control to "true"
-        switch (e.keyCode) {
-            case 37:
-                controls.left = true;
-                break;
-            case 38:
-                controls.up = true;
-                break;
-            case 39:
-                controls.right = true;
-                break;
-            case 40:
-                controls.down = true;
-                break;
-            default:
-                prevent = false;
-        }
-        // Avoid the browser to react unexpectedly
-        if (prevent) {
-            e.preventDefault();
-        } else {
-            return;
-        }
-        // Update the character's direction
-        user.setDirection(controls);
-    });
-
-    // When the user releases a key
-    jQuery(document).keyup(function (e) {
-        var prevent = true;
-        // Update the state of the attached control to "false"
-        switch (e.keyCode) {
-            case 37:
-                controls.left = false;
-                break;
-            case 38:
-                controls.up = false;
-                break;
-            case 39:
-                controls.right = false;
-                break;
-            case 40:
-                controls.down = false;
-                break;
-            default:
-                prevent = false;
-        }
-        // Avoid the browser to react unexpectedly
-        if (prevent) {
-            e.preventDefault();
-        } else {
-            return;
-        }
-        // Update the character's direction
-        user.setDirection(controls);
-    });
-
-    // On resize
-    jQuery(window).resize(function () {
-        // Redefine the size of the renderer
-//        basicScene.setAspect();
-        self.setAspect();
-    });
-}
 
 // Defining the renderer's size
 BasicScene.prototype.setAspect = function () {
@@ -252,6 +173,8 @@ BasicScene.prototype.frame = function () {
 
 //    var w = this.container.width();
 //    var h = jQuery(window).height() - this.container.offset().top - 20;
+
+    this.starField.update(this.clock.getDelta());
 
     this.user1.onTick(this.clock.getDelta());
 
@@ -300,10 +223,9 @@ BasicScene.prototype.createCenteroid = function(){
     );
 
     this.centeroidMesh.position = this.getCharactersCenter();
-
+/*
     this.scene.add(this.centeroidMesh);
-
-    this.centeroidMesh.add(this.camera);
+    this.centeroidMesh.add(this.camera);*/
 }
 
 
