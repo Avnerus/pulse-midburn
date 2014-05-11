@@ -16,6 +16,8 @@ BasicScene.prototype.init = function () {
     var World = require('./World');
     var StarField = require('./StarField');
 
+    this.loaded = false;
+
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -53,10 +55,10 @@ BasicScene.prototype.init = function () {
     // Define the container for the renderer
     this.container = $('#basic-scene');
 
-
     this.characters = [];
     // Create the user's character
     this.user1 = new Character({
+        model: 'models/pulsechar.js',
         color: 0x000088,
         basic_scene:this,
         id:0,
@@ -67,6 +69,7 @@ BasicScene.prototype.init = function () {
     });
 
     this.user2 = new Character({
+        model: 'models/pulsechar.js',
         color: 0x7A43B6,
         basic_scene:this,
         id:1,
@@ -77,6 +80,7 @@ BasicScene.prototype.init = function () {
     });
 
     this.user3 = new Character({
+        model: 'models/pulsechar.js',
         color: 0x880000,
         basic_scene:this,
         id:2,
@@ -91,11 +95,7 @@ BasicScene.prototype.init = function () {
     this.characters.push(this.user2);
     this.characters.push(this.user3);
 
-    this.scene.add(this.user1.mesh);
-    this.scene.add(this.user2.mesh);
-    this.scene.add(this.user3.mesh);
-
-    this.createCenteroid();
+   // this.createCenteroid();
 
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
@@ -115,14 +115,14 @@ BasicScene.prototype.init = function () {
 
 //    this.user1.applyForce(0, 0, 0, window.innerWidth / 2, window.innerHeight / 2, 1000);
 
-    var gr1 = new THREE.Vector3(0, 0, 0);
+   /* var gr1 = new THREE.Vector3(0, 0, 0);
     this.user1.mesh.setGravityMesh(gr1);
 
     var gr2 = new THREE.Vector3(0, 0, 0);
     this.user2.mesh.setGravityMesh(gr2);
 
     var gr3 = new THREE.Vector3(0, 0, 0);
-    this.user3.mesh.setGravityMesh(gr3);
+    this.user3.mesh.setGravityMesh(gr3);*/
 
 
     // Star field
@@ -132,10 +132,14 @@ BasicScene.prototype.init = function () {
     this.scene.simulate();
 
 
-    this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user1.getCentroid());
+   /* this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user1.getCentroid());
     this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user2.getCentroid());
-    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user3.getCentroid());
+    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user3.getCentroid());*/
 
+}
+
+BasicScene.prototype.loadingProgress = function(item, loaded, total) {
+    console.log("Loading progress ", item, loaded, total);
 }
 
 BasicScene.prototype.getOtherCharacter = function(excludeId){
@@ -170,10 +174,6 @@ BasicScene.prototype.setAspect = function () {
 
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
-
-//    var w = this.container.width();
-//    var h = jQuery(window).height() - this.container.offset().top - 20;
-
     this.starField.update(this.clock.getDelta());
 
     this.user1.onTick(this.clock.getDelta());
@@ -182,9 +182,13 @@ BasicScene.prototype.frame = function () {
 
     this.user3.onTick(this.clock.getDelta());
 
-    this.centeroidMesh.position = this.getCharactersCenter();
+    //this.centeroidMesh.position = this.getCharactersCenter();
 
     this.renderer.render(this.scene, this.camera);
+
+//    var w = this.container.width();
+//    var h = jQuery(window).height() - this.container.offset().top - 20;
+
 }
 
 

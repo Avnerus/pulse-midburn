@@ -118,11 +118,11 @@ class Player {
       int note = CURRENT_SCALE[_alternator % CURRENT_SCALE.length] + LEAD_OCTAVE;
       note += (8 * change);
       chord[0] = note;
-      //sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
+        sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
     }
     else if (_role == VOICE_ROLE) {
       sendPrg("synthfreq4", _lastBPM);
-      sendPrg("synthfreq4-1", _lastBPM);
+      sendPrg("synthfreq4-1", _lastBPM - 10);
       if (_alternator % 2 == 0) {
           _changeBuffer += change;        
           int[] chord = {42};          
