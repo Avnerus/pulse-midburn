@@ -35,7 +35,7 @@ BasicScene.prototype.init = function () {
     );
 
     console.log(window.innerWidth + " * " + window.innerHeight);
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
     this.camera.position.set(0, 0, 50);
 
    	var controls = new THREE.OrbitControls(this.camera );
@@ -63,8 +63,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:0,
         init_mass:1,
-        position: new THREE.Vector3(0, 0, -50),
-        impulse: new THREE.Vector3(0, 0, 0)
+        position: new THREE.Vector3(-50, -50, -150),
+        impulse: new THREE.Vector3(0, 0, 0),
         particels_color:'red'
     });
 
@@ -74,8 +74,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:1,
         init_mass:1,
-        position: new THREE.Vector3(-200, 50, -50),
-        impulse: new THREE.Vector3(0, 0, 0)
+        position: new THREE.Vector3(-100, 50, -150),
+        impulse: new THREE.Vector3(0, 0, 0),
         particels_color:'green'
     });
 
@@ -85,15 +85,27 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:2,
         init_mass:1,
-        position: new THREE.Vector3(200, 100, -50),
-        impulse: new THREE.Vector3(0, 0, 0)
+        position: new THREE.Vector3(100, 50, -150),
+        impulse: new THREE.Vector3(0, 0, 0),
         particels_color:'blue'
+    });
+
+    this.user4 = new Character({
+        model: 'models/pulsechar.js',
+        color: 0x880000,
+        basic_scene:this,
+        id:3,
+        init_mass:1,
+        position: new THREE.Vector3(100, -50, -150),
+        impulse: new THREE.Vector3(0, 0, 0),
+        particels_color:'yellow'
     });
 
 
     this.characters.push(this.user1);
     this.characters.push(this.user2);
     this.characters.push(this.user3);
+    this.characters.push(this.user4);
 
    // this.createCenteroid();
 

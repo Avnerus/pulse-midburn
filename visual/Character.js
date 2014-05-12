@@ -62,12 +62,12 @@ Character.prototype.loadMesh = function(geometry, material) {
         this.args.init_mass // mass
     );
     this.mesh.position.set(this.args.position.x, this.args.position.y, this.args.position.z);
-    this.mesh.scale.set( 2, 2, 2 );
+    this.mesh.scale.set( 1.5, 1.5,  1.5);
 
     this.basicScene.scene.add(this.mesh);
 
     // Apply initial position impulse
-    this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
+    //this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
 
 }
 
@@ -86,7 +86,7 @@ Character.prototype.onBeatUpdate = function(){
 
         v.normalize();
 
-        var m1m2 = 1;
+        var m1m2 = 0;
         if(others[i].lastBeat && self.lastBeat){
             m1m2 = (self.lastBeat * self.lastBeat * self.lastBeat)/ (others[i].lastBeat * others[i].lastBeat * others[i].lastBeat )
         }
