@@ -63,9 +63,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:0,
         init_mass:1,
-        initX:0,
-        initY:0,
-        initZ:-300
+        position: new THREE.Vector3(0, 0, -50),
+        impulse: new THREE.Vector3(0, 0, 0)
     });
 
     this.user2 = new Character({
@@ -74,9 +73,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:1,
         init_mass:1,
-        initX:-200,
-        initY:50,
-        initZ:-300
+        position: new THREE.Vector3(-200, 50, -50),
+        impulse: new THREE.Vector3(0, 0, 0)
     });
 
     this.user3 = new Character({
@@ -85,9 +83,8 @@ BasicScene.prototype.init = function () {
         basic_scene:this,
         id:2,
         init_mass:1,
-        initX:200,
-        initY:100,
-        initZ:-300
+        position: new THREE.Vector3(200, 100, -50),
+        impulse: new THREE.Vector3(0, 0, 0)
     });
 
 
@@ -131,10 +128,6 @@ BasicScene.prototype.init = function () {
     // telling Physijs to start working
     this.scene.simulate();
 
-
-   /* this.user1.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user1.getCentroid());
-    this.user2.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user2.getCentroid());
-    this.user3.mesh.applyImpulse(new THREE.Vector3(0, 0, -100), this.user3.getCentroid());*/
 
 }
 

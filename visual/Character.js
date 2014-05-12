@@ -61,11 +61,13 @@ Character.prototype.loadMesh = function(geometry, material) {
         new THREE.MeshFaceMaterial(material),
         this.args.init_mass // mass
     );
+    this.mesh.position.set(this.args.position.x, this.args.position.y, this.args.position.z);
     this.mesh.scale.set( 2, 2, 2 );
 
-    this.mesh.position.set(this.args.initX, this.args.initY, this.args.initZ);
-
     this.basicScene.scene.add(this.mesh);
+
+    // Apply initial position impulse
+    this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
 
 }
 
