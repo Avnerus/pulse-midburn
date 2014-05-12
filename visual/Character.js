@@ -184,6 +184,15 @@ Character.prototype.fireParticles = function(){
 //        this.basicScene.scene.remove(this.particleGroup.mesh)
     }
 
+    this.particleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
+    this.particleGroup = new SPE.Group({
+        // Give the particles in this group a texture
+        texture: self.particleTexture,
+        maxAge: 2 // How long should the particles live for? Measured in seconds.
+    });
+
+
+//    this.mesh.visible = false;
 
     this.particleEmitter = new SPE.Emitter({
        position: new THREE.Vector3(
@@ -191,6 +200,8 @@ Character.prototype.fireParticles = function(){
             self.mesh.position.y,
             self.mesh.position.z
         ),
+        type: 'sphere',
+        radius: 20,
 
         accelerationSpread: new THREE.Vector3(
             getRandomNumber(-10),
@@ -214,8 +225,8 @@ Character.prototype.fireParticles = function(){
             Math.random(),
             Math.random()
         ),
-        sizeStart: 2,
-        sizeEnd: 2,
+        sizeStart: 50,
+        sizeEnd: 50,
 
         particleCount: 500,
 
@@ -227,7 +238,7 @@ Character.prototype.fireParticles = function(){
     // Add the emitter to the group.
     this.particleGroup.addEmitter(this.particleEmitter);
     console.log(this.particleTexture);
-
+    this.basicScene.scene.add(this.particleGroup.mesh);
 
 //    setTimeout(function(){
 //        self.particleEmitter.alive = 0;
