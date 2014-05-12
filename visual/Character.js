@@ -22,6 +22,8 @@ Character.prototype.init = function (args) {
     this.color = args.color;
     this.args = args;
 
+    this.particleTexture = THREE.ImageUtils.loadTexture('/image/bullet.png');
+
     console.log('Character init: id = ', this.id);
 
 
@@ -168,9 +170,8 @@ Character.prototype.fireParticles = function(){
 
     this.particleGroup = new SPE.Group({
         // Give the particles in this group a texture
-        texture: THREE.ImageUtils.loadTexture('/image/spark.png'),
-        maxAge: 1500, // How long should the particles live for? Measured in seconds.
-        blending: THREE.AdditiveBlending
+        texture: self.particleTexture,
+        maxAge: 2 // How long should the particles live for? Measured in seconds.
     });
 
 // Create a single emitter
