@@ -22,7 +22,14 @@ Character.prototype.init = function (args) {
     this.color = args.color;
     this.args = args;
 
-    this.particleTexture = THREE.ImageUtils.loadTexture('/image/bullet.png');
+    this.particleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
+    this.particleGroup = new SPE.Group({
+        // Give the particles in this group a texture
+        texture: self.particleTexture,
+        maxAge: 2 // How long should the particles live for? Measured in seconds.
+    });
+
+    this.basicScene.scene.add(this.particleGroup.mesh);
 
     console.log('Character init: id = ', this.id);
 
@@ -36,23 +43,24 @@ Character.prototype.init = function (args) {
     this.eventEmitter = require('./events_util').getEventEmitter();
 
 
-    this.eventEmitter.on('fire_particles', function(args){
-        console.log('character on fire_particles, args = ', args);
-
-        if(args.id == self.id){
-            console.log('Character id: ', self.id, '  FIRING!!!!');
-            self.fireParticles();
-        }
-    });
+//    this.eventEmitter.on('fire_particles', function(args){
+//        console.log('character on fire_particles, args = ', args);
+//
+//        if(args.id == self.id){
+//            console.log('Character id: ', self.id, '  FIRING!!!!');
+//            self.fireParticles();
+//        }
+//    });
 
     this.eventEmitter.on('beat_update', function(args){
-        console.log('character on beat_update, args = ', args);
+//        console.log('character on beat_update, args = ', args);
 
-        if(args.id == self.id){
+        if(0 == self.id && args.id == 0){
             self.lastBeat = args.beat;
+            self.fireParticles();
         }
 
-        self.fireParticles();
+
     });
 }
 
@@ -158,56 +166,73 @@ Character.prototype.onBeatUpdateTest = function(){
     self.mesh.setGravityMesh(sumVec);
 }
 
-
+function getRandomNumber( base ) {
+    return Math.random() * base - (base/2);
+}
 
 Character.prototype.fireParticles = function(){
     var self = this;
+    if(!self.mesh || !self.particleGroup){
+        return;
+    }
+
     var particelsColor = this.args.particels_color;
+
+    console.log('fireParticles ', self.mesh.position)
 
     if(this.particleGroup){
 //        this.basicScene.scene.remove(this.particleGroup.mesh)
     }
 
-    this.particleGroup = new SPE.Group({
-        // Give the particles in this group a texture
-        texture: self.particleTexture,
-        maxAge: 2 // How long should the particles live for? Measured in seconds.
-    });
 
-// Create a single emitter
     this.particleEmitter = new SPE.Emitter({
-        duration: 0.2,// in seconds
-        type: 'sphere',
-        position: new THREE.Vector3(self.mesh.position.x, self.mesh.position.y, self.mesh.position.z),
-//        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
-//        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
-        radius: 50,  // USE WHEN type=sphere OR type=disk
-        speed: 1500,  // USE WHEN type=sphere OR type=disk
-        sizeStart: 15,
-//        sizeStartSpread: 50,
-        sizeMiddle: 15,
-//        sizeMiddleSpread: 50,
-        sizeEnd: 45,
-//        sizeEndSpread: 50,
-        opacityStart: 1,
+       position: new THREE.Vector3(
+            self.mesh.position.x,
+            self.mesh.position.y,
+            self.mesh.position.z
+        ),
+
+        accelerationSpread: new THREE.Vector3(
+            getRandomNumber(-10),
+            getRandomNumber(-10),
+            getRandomNumber(-10)
+        ),
+
+        velocitySpread: new THREE.Vector3(
+            getRandomNumber(20),
+            getRandomNumber(20),
+            getRandomNumber(20)
+        ),
+
+        colorStart: (new THREE.Color()).setRGB(
+            Math.random(),
+            Math.random(),
+            Math.random()
+        ),
+        colorEnd: (new THREE.Color()).setRGB(
+            Math.random(),
+            Math.random(),
+            Math.random()
+        ),
+        sizeStart: 2,
+        sizeEnd: 2,
+
+        particleCount: 500,
+
+        opacityStart: 0,
         opacityMiddle: 1,
-        opacityEnd: 1,
-//        colorStartSpread: new THREE.Vector3(34, 232, 123),
-//        colorMiddleSpread: new THREE.Vector3(34, 232, 123),
-//        colorEndSpread: new THREE.Vector3(34, 232, 123),
-        colorStart: new THREE.Color(particelsColor),
-        colorMiddle: new THREE.Color(particelsColor),
-        colorEnd: new THREE.Color(particelsColor),
-
-        particleCount:self.lastBeat * 40,
-        alive: 1, //What percentage of `particleCount` particles should be emitted? 0 being no particles, 1 being 100% of `particleCount`.
-
+        opacityEnd: 0
     });
 
     // Add the emitter to the group.
     this.particleGroup.addEmitter(this.particleEmitter);
+    console.log(this.particleTexture);
 
-    this.basicScene.scene.add(this.particleGroup.mesh);
+
+//    setTimeout(function(){
+//        self.particleEmitter.alive = 0;
+//    }, 1200);
+
 }
 
 Character.prototype.addHoverAnimation = function(){
@@ -264,9 +289,6 @@ Character.prototype.onTick = function(delta){
 
 //    console.log('Character.prototype.onTick delta = ', delta);
     if (this.mesh) {
-        if(this.particleEmitter){
-            this.particleEmitter.position = this.mesh.position;
-        }
 
         if(this.particleGroup){
             this.particleGroup.tick(delta);

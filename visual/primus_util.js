@@ -21,7 +21,7 @@
     });
 
     primus.on('data', function message(data) {
-        console.log('PRIMUS Received: ', data);
+//        console.log('PRIMUS Received: ', data);
 
         eventEmitter.emit(data.message, data.args);
     });
