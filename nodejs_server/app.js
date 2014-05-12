@@ -50,78 +50,78 @@ httpServer.listen(app.get('port'), function(){
 require('./routes/beat')(app);
 
 
-setTimeout(function(){
-    var primusServer = require('./primus_util').getServer();
-    function testBeats(interval){
-
-        interval || 1000;
-
-        setTimeout(function(){
-
-            var beat0 = 60;//Math.random() * (80 - 60) + 60;
-
-            primusServer.write({
-                args:{
-                    id:0,
-                    beat:beat0
-                },
-                message:'beat_update'
-            });
-
-            var interval = Math.random() * (1200 - 800) + 600;
-            testBeats(interval);
-        }, interval)
-    }
-    testBeats();
-}, 3000)
-
-
-setTimeout(function(){
-    var primusServer = require('./primus_util').getServer();
-    function testBeats(interval){
-
-        interval || 1000;
-
-        setTimeout(function(){
-            var beat1 = 70;//Math.random() * (80 - 60) + 60;
-
-            primusServer.write({
-                args:{
-                    id:1,
-                    beat:beat1
-                },
-                message:'beat_update'
-            });
-
-            var interval = Math.random() * (1200 - 800) + 600;
-            testBeats(interval);
-        }, interval)
-    }
-    testBeats();
-}, 3000)
-
-
-setTimeout(function(){
-    var primusServer = require('./primus_util').getServer();
-    function testBeats(interval){
-
-        interval || 1000;
-
-        setTimeout(function(){
-            var beat2 = 80;//Math.random() * (80 - 60) + 60;
-
-            primusServer.write({
-                args:{
-                    id:2,
-                    beat:beat2
-                },
-                message:'beat_update'
-            });
-
-            var interval = Math.random() * (1200 - 800) + 600;
-            testBeats(interval);
-        }, interval)
-    }
-    testBeats();
-}, 3000)
+//setTimeout(function(){
+//    var primusServer = require('./primus_util').getServer();
+//    function testBeats(interval){
+//
+//        interval || 1000;
+//
+//        setTimeout(function(){
+//
+//            var beat0 = 60;//Math.random() * (80 - 60) + 60;
+//
+//            primusServer.write({
+//                args:{
+//                    id:0,
+//                    beat:beat0
+//                },
+//                message:'beat_update'
+//            });
+//
+//            var interval = Math.random() * (1200 - 800) + 600;
+//            testBeats(interval);
+//        }, interval)
+//    }
+//    testBeats();
+//}, 3000)
+//
+//
+//setTimeout(function(){
+//    var primusServer = require('./primus_util').getServer();
+//    function testBeats(interval){
+//
+//        interval || 1000;
+//
+//        setTimeout(function(){
+//            var beat1 = 70;//Math.random() * (80 - 60) + 60;
+//
+//            primusServer.write({
+//                args:{
+//                    id:1,
+//                    beat:beat1
+//                },
+//                message:'beat_update'
+//            });
+//
+//            var interval = Math.random() * (1200 - 800) + 600;
+//            testBeats(interval);
+//        }, interval)
+//    }
+//    testBeats();
+//}, 3000)
+//
+//
+//setTimeout(function(){
+//    var primusServer = require('./primus_util').getServer();
+//    function testBeats(interval){
+//
+//        interval || 1000;
+//
+//        setTimeout(function(){
+//            var beat2 = 80;//Math.random() * (80 - 60) + 60;
+//
+//            primusServer.write({
+//                args:{
+//                    id:2,
+//                    beat:beat2
+//                },
+//                message:'beat_update'
+//            });
+//
+//            var interval = Math.random() * (1200 - 800) + 600;
+//            testBeats(interval);
+//        }, interval)
+//    }
+//    testBeats();
+//}, 3000)
 

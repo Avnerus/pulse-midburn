@@ -29,6 +29,7 @@ class Player {
   
   void beat(int bpm) {
      //println("Player" + _index + " beats at " + bpm);
+     updateServer(_index, bpm);
      
      int change = 0;
      
@@ -46,8 +47,9 @@ class Player {
      this.play(change);
      
      _alternator++;
+     
+     
   }
-  
     
   void changeDown() {
        int newScale = int(random(SCALES.length));

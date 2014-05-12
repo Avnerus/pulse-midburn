@@ -21,18 +21,18 @@ function StarField(opts) {
 
 StarField.prototype.initParticles = function() {
     this.particleGroup = new SPE.Group({
-    texture: THREE.ImageUtils.loadTexture('./image/star.png'),
-    maxAge: 2,
+        texture: THREE.ImageUtils.loadTexture('./image/star.png'),
+        maxAge: 2,
         blending: THREE.AdditiveBlending
     });
 
     var emitter = new SPE.Emitter({
-        positionSpread: new THREE.Vector3(100, 100, 100),
+        positionSpread: new THREE.Vector3(200, 100, 100),
         acceleration: new THREE.Vector3(0, 0, 10),
         velocity: new THREE.Vector3(0, 0, 10),
         colorStart: new THREE.Color('white'),
         colorEnd: new THREE.Color('white'),
-        sizeStart: 2,
+        sizeStart: 1,
         sizeEnd: 2,
         opacityStart: 0,
         opacityMiddle: 1,

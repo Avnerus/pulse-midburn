@@ -65,6 +65,7 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         position: new THREE.Vector3(0, 0, -50),
         impulse: new THREE.Vector3(0, 0, 0)
+        particels_color:'red'
     });
 
     this.user2 = new Character({
@@ -75,6 +76,7 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         position: new THREE.Vector3(-200, 50, -50),
         impulse: new THREE.Vector3(0, 0, 0)
+        particels_color:'green'
     });
 
     this.user3 = new Character({
@@ -85,6 +87,7 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         position: new THREE.Vector3(200, 100, -50),
         impulse: new THREE.Vector3(0, 0, 0)
+        particels_color:'blue'
     });
 
 

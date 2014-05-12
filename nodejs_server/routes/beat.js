@@ -10,6 +10,6 @@
     var controller = require('../controllers/beat');
 
     module.exports = function(app) {
-        return app.post('/beat/:player_id', controller.fireParticles);
+        return app.post('/beat/:player_id', controller.updatePlayer);
     };
 }).call(this);
