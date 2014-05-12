@@ -65,7 +65,8 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         initX:0,
         initY:0,
-        initZ:-300
+        initZ:-300,
+        particels_color:'red'
     });
 
     this.user2 = new Character({
@@ -76,7 +77,8 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         initX:-200,
         initY:50,
-        initZ:-300
+        initZ:-300,
+        particels_color:'green'
     });
 
     this.user3 = new Character({
@@ -87,7 +89,8 @@ BasicScene.prototype.init = function () {
         init_mass:1,
         initX:200,
         initY:100,
-        initZ:-300
+        initZ:-300,
+        particels_color:'blue'
     });
 
 

@@ -8,20 +8,22 @@
 
 (function() {
 
-    exports.fireParticles = function(req, res, next) {
+    exports.updatePlayer = function(req, res, next) {
         var playerId = req.params.player_id;
+        var bpm = req.body.bpm;
 
-        console.log('/beat/:player_id ', ' playerId = ', playerId);
+//        console.log('/beat/:player_id ', ' playerId = ', playerId, ' req.body = ', req.body);
 
         var primusServer = require('../primus_util').getServer();
         primusServer.write({
-           args:{
-               id:playerId
-           },
-           message:'fire_particles'
+            args:{
+                id:playerId,
+                beat:bpm
+            },
+            message:'beat_update'
         });
 
-        res.send(200, {});
+        res.send(200, {message:'ok'});
     }
 
 

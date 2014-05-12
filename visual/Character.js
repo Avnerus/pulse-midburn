@@ -50,7 +50,7 @@ Character.prototype.init = function (args) {
             self.lastBeat = args.beat;
         }
 
-//        self.onBeatUpdate();
+        self.fireParticles();
     });
 }
 
@@ -158,33 +158,47 @@ Character.prototype.onBeatUpdateTest = function(){
 
 Character.prototype.fireParticles = function(){
     var self = this;
+    var particelsColor = this.args.particels_color;
+
+    if(this.particleGroup){
+//        this.basicScene.scene.remove(this.particleGroup.mesh)
+    }
 
     this.particleGroup = new SPE.Group({
         // Give the particles in this group a texture
         texture: THREE.ImageUtils.loadTexture('/image/spark.png'),
-        maxAge: 3 // How long should the particles live for? Measured in seconds.
+        maxAge: 1500, // How long should the particles live for? Measured in seconds.
+        blending: THREE.AdditiveBlending
     });
 
 // Create a single emitter
     this.particleEmitter = new SPE.Emitter({
-        duration: 3,// in seconds
+        duration: 0.2,// in seconds
         type: 'sphere',
         position: new THREE.Vector3(self.mesh.position.x, self.mesh.position.y, self.mesh.position.z),
 //        acceleration: new THREE.Vector3(0, 10, 0), // USE WHEN type=cube
 //        velocity: new THREE.Vector3(0, 15, 0),    // USE WHEN type=cube
-        radius: 55,  // USE WHEN type=sphere OR type=disk
-        speed: 80,  // USE WHEN type=sphere OR type=disk
-        particlesPerSecond: 200,
-        sizeStart: 30,
-        sizeEnd: 0,
+        radius: 50,  // USE WHEN type=sphere OR type=disk
+        speed: 1500,  // USE WHEN type=sphere OR type=disk
+        sizeStart: 15,
+//        sizeStartSpread: 50,
+        sizeMiddle: 15,
+//        sizeMiddleSpread: 50,
+        sizeEnd: 45,
+//        sizeEndSpread: 50,
         opacityStart: 1,
-        opacityEnd: 0,
-        colorStartSpread: new THREE.Vector3(20, 100, 98),
-        colorMiddleSpread: new THREE.Vector3(67, 23, 33),
-        colorEndSpread: new THREE.Vector3(145, 178, 154),
-//        colorStart: new THREE.Color('blue'),
-//        colorMiddle: new THREE.Color( 'white' ),
-//        colorEnd: new THREE.Color('white')
+        opacityMiddle: 1,
+        opacityEnd: 1,
+//        colorStartSpread: new THREE.Vector3(34, 232, 123),
+//        colorMiddleSpread: new THREE.Vector3(34, 232, 123),
+//        colorEndSpread: new THREE.Vector3(34, 232, 123),
+        colorStart: new THREE.Color(particelsColor),
+        colorMiddle: new THREE.Color(particelsColor),
+        colorEnd: new THREE.Color(particelsColor),
+
+        particleCount:self.lastBeat * 40,
+        alive: 1, //What percentage of `particleCount` particles should be emitted? 0 being no particles, 1 being 100% of `particleCount`.
+
     });
 
     // Add the emitter to the group.
