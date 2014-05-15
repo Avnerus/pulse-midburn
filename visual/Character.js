@@ -116,10 +116,6 @@ Character.prototype.onBeatUpdate = function(){
         if(others[i].lastBeat && self.lastBeat){
             m1m2 = (self.lastBeat)/ (others[i].lastBeat )
         }
-        if(self.id == 2){
-//            console.log('m1m2 = ', m1m2);
-        }
-
 
         var r = others[i].mesh.position.distanceTo(this.mesh.position);
         if(self.id == 2) {
@@ -135,6 +131,14 @@ Character.prototype.onBeatUpdate = function(){
 
         normProjVectors.push(v);
     }
+    // And one vector to be pulled towards the center
+    var centerPosition = new THREE.Vector3(0, 0, this.basicScene.getAverageDepth());
+    var distanceToCenter = this.mesh.position.distanceTo(centerPosition);
+    var vToCenter = mathUtil.subVectors(centerPosition, this.mesh.position);
+    vToCenter.normalize();
+    vToCenter.multiplyScalar(distanceToCenter * distanceToCenter* 0.001);
+    normProjVectors.push(vToCenter);
+
 
     var v = normProjVectors[0];
     for(var i = 1; i < normProjVectors.length; i++){
@@ -153,7 +157,7 @@ Character.prototype.onBeatUpdateTest = function(){
 
 //        var v = mathUtil.projectVector(this.mesh.position, others[i].mesh.position);
 //        var v = mathUtil.multiplyVectors(this.mesh.position, others[i].mesh.position);
-
+//
     var otheChar = others[0];
 //    console.log('before sub: this.mesh.position = ', this.mesh.position, ' otheChar.mesh.position = ', otheChar.mesh.position);
 

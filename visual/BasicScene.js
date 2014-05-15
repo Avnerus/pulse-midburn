@@ -43,13 +43,18 @@ BasicScene.prototype.init = function () {
 
     this.scene.add(this.camera);
 
-    this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
+/*    this.hemisphereLight = new THREE.HemisphereLight( 0xffffff, 0x000000, 0.6 );
     this.hemisphereLight.position.set(0, 256, 0);
-    this.scene.add(this.hemisphereLight);
+    this.scene.add(this.hemisphereLight); */
 
     this.pointLight = new THREE.PointLight();
     this.pointLight.position.set(-256, 256, 0);
     this.scene.add(this.pointLight);
+
+
+    this.sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 100, 100),  new THREE.MeshLambertMaterial({color: 0xff0000}));
+    this.sphere.overdraw = true;
+    this.scene.add(this.sphere);
 
 
     // Define the container for the renderer
@@ -176,16 +181,20 @@ BasicScene.prototype.frame = function () {
 
 
     if (this.user1.mesh) {
-        var diff = this.user1.mesh.position.z - this.distance;
-        this.camera.position.z += diff;
-        this.distance += diff;
-        this.starField.starFieldGroup.mesh.position.z += diff
+        var averageDepth = this.getAverageDepth();
+        this.camera.position = new THREE.Vector3(0, 0, averageDepth + 200);
+ ;
+        this.starField.starFieldGroup.mesh.position = new THREE.Vector3(0, 0, averageDepth + 100);
+        this.sphere.position = new THREE.Vector3(0,0, averageDepth);
 
     }
 
     //this.centeroidMesh.position = this.getCharactersCenter();
 
     this.starField.update(this.clock.getDelta());
+
+    
+
 //    this.camera.position.z = this.user1.position.z; 
     this.renderer.render(this.scene, this.camera);
 
@@ -194,6 +203,14 @@ BasicScene.prototype.frame = function () {
 
 }
 
+BasicScene.prototype.getAverageDepth = function() {
+    // The average depth of all the characters
+    var z = 0;
+    for(var i = 0; i < this.characters.length; i++){
+        z += this.characters[i].mesh.position.z;
+    }
+     return z / this.characters.length;
+}
 
 BasicScene.prototype.getCharactersCenter = function(){
     var characters = this.characters;
