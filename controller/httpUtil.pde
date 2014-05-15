@@ -12,6 +12,7 @@ public void updateServer(int playerId, int bpm){
    Map map = new HashMap<String, String>();
    map.put("bpm", String.valueOf(bpm));
    json.putAll(map);
+   println(json);
     
    HttpClient.doPost("http://localhost:3005/beat/" + playerId, json); 
 }

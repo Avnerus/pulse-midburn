@@ -54,7 +54,8 @@ BasicScene.prototype.init = function () {
 
     // Define the container for the renderer
     this.container = $('#basic-scene');
-
+    this.particleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
+    
     this.characters = [];
     // Create the user's character
     this.user1 = new Character({
@@ -62,32 +63,32 @@ BasicScene.prototype.init = function () {
         color: 0x000088,
         basic_scene:this,
         id:0,
-        init_mass:1,
-        position: new THREE.Vector3(-50, -50, -150),
+        init_mass:0.1,
+        position: new THREE.Vector3(-50, 50, -200),
         impulse: new THREE.Vector3(0, 0, 0),
-        particels_color:'red'
+        beatBlastColor:new THREE.Color('red')
     });
-
     this.user2 = new Character({
         model: 'models/pulsechar.js',
         color: 0x7A43B6,
         basic_scene:this,
         id:1,
-        init_mass:1,
-        position: new THREE.Vector3(-100, 50, -150),
+        init_mass:0.1,
+        position: new THREE.Vector3(-70, -50, -200),
         impulse: new THREE.Vector3(0, 0, 0),
-        particels_color:'green'
+        beatBlastColor:new THREE.Color('green')
     });
+
 
     this.user3 = new Character({
         model: 'models/pulsechar.js',
         color: 0x880000,
         basic_scene:this,
         id:2,
-        init_mass:1,
-        position: new THREE.Vector3(100, 50, -150),
+        init_mass:0.1,
+        position: new THREE.Vector3(100, 50, -200),
         impulse: new THREE.Vector3(0, 0, 0),
-        particels_color:'blue'
+        beatBlastColor:new THREE.Color('blue')
     });
 
     this.user4 = new Character({
@@ -95,10 +96,10 @@ BasicScene.prototype.init = function () {
         color: 0x880000,
         basic_scene:this,
         id:3,
-        init_mass:1,
-        position: new THREE.Vector3(100, -50, -150),
+        init_mass:0.1,
+        position: new THREE.Vector3(70, -50, -200),
         impulse: new THREE.Vector3(0, 0, 0),
-        particels_color:'yellow'
+        beatBlastColor:new THREE.Color('yellow')
     });
 
 
@@ -109,6 +110,7 @@ BasicScene.prototype.init = function () {
 
    // this.createCenteroid();
 
+   this.distance = -200;
 
     // Create the "world" : a 3D representation of the place we'll be putting our character in
     this.world = new World({
@@ -118,7 +120,6 @@ BasicScene.prototype.init = function () {
 
 
     // Define the size of the renderer
-    //this.setAspect();
     // Insert the renderer in the container
     this.container.prepend(this.renderer.domElement);
 
@@ -164,34 +165,27 @@ BasicScene.prototype.getOtherCharacter = function(excludeId){
 }
 
 
-// Defining the renderer's size
-BasicScene.prototype.setAspect = function () {
-    // Fit the container's full width
-
-    var w = this.container.width(),
-    // Fit the initial visible area's height
-        h = jQuery(window).height() - this.container.offset().top - 20;
-//    Update the renderer and the camera
-
-//    var w = 600;
-//    var h = 340;
-    this.renderer.setSize(w, h);
-    this.camera.aspect = w / h;
-    this.camera.updateProjectionMatrix();
-}
 
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
-    this.starField.update(this.clock.getDelta());
 
-    this.user1.onTick(this.clock.getDelta());
-
+    this.user1.onTick(this.clock.getDelta()); 
     this.user2.onTick(this.clock.getDelta());
-
     this.user3.onTick(this.clock.getDelta());
+    this.user4.onTick(this.clock.getDelta());
+
+/*
+    if (this.user1.mesh) {
+        var diff = this.user1.mesh.position.z - this.distance;
+        this.camera.position.z += diff;
+        this.distance += diff;
+
+    }*/
 
     //this.centeroidMesh.position = this.getCharactersCenter();
 
+    this.starField.update(this.clock.getDelta());
+//    this.camera.position.z = this.user1.position.z; 
     this.renderer.render(this.scene, this.camera);
 
 //    var w = this.container.width();
@@ -207,10 +201,6 @@ BasicScene.prototype.getCharactersCenter = function(){
     var position = new THREE.Vector3(0, 0, 0);
     for(var i = 0; i < characters.length; i++){
         position.add(characters[i].mesh.position);
-
-        if(z > characters[i].mesh.position.z){
-            z = characters[i].mesh.position.z;
-        }
     }
     position.divideScalar(characters.length);
 

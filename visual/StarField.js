@@ -20,8 +20,8 @@ function StarField(opts) {
 
 
 StarField.prototype.initParticles = function() {
-    this.particleGroup = new SPE.Group({
-        texture: THREE.ImageUtils.loadTexture('./image/star.png'),
+    this.starFieldGroup = new SPE.Group({
+        texture: THREE.ImageUtils.loadTexture('/image/star.png'),
         maxAge: 2,
         blending: THREE.AdditiveBlending
     });
@@ -37,14 +37,13 @@ StarField.prototype.initParticles = function() {
         opacityStart: 0,
         opacityMiddle: 1,
         opacityEnd: 0,
-
         particleCount: 2000
     });
 
-    this.particleGroup.addEmitter( emitter );
-    this.scene.add(this.particleGroup.mesh );
+    this.starFieldGroup.addEmitter( emitter );
+    this.scene.add(this.starFieldGroup.mesh );
 }
 
 StarField.prototype.update = function(dt) {
-    this.particleGroup.tick();
+    this.starFieldGroup.tick();
 }

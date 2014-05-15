@@ -21,15 +21,7 @@ Character.prototype.init = function (args) {
     this.id = args.id;
     this.color = args.color;
     this.args = args;
-
-    this.particleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
-    this.particleGroup = new SPE.Group({
-        // Give the particles in this group a texture
-        texture: self.particleTexture,
-        maxAge: 2 // How long should the particles live for? Measured in seconds.
-    });
-
-    this.basicScene.scene.add(this.particleGroup.mesh);
+    this.trigger = true;
 
     console.log('Character init: id = ', this.id);
 
@@ -43,48 +35,72 @@ Character.prototype.init = function (args) {
     this.eventEmitter = require('./events_util').getEventEmitter();
 
 
-//    this.eventEmitter.on('fire_particles', function(args){
-//        console.log('character on fire_particles, args = ', args);
-//
-//        if(args.id == self.id){
-//            console.log('Character id: ', self.id, '  FIRING!!!!');
-//            self.fireParticles();
-//        }
-//    });
-
     this.eventEmitter.on('beat_update', function(args){
-//        console.log('character on beat_update, args = ', args);
+    //    console.log('character on beat_update, args = ', args);
 
-        if(0 == self.id && args.id == 0){
+        if(args.id == self.id){
             self.lastBeat = args.beat;
             self.fireParticles();
         }
 
-
     });
+    
+    // The beat emitter
+        
+    this.particleTexture = THREE.ImageUtils.loadTexture('/image/bullet.png');
+    this.particleGroup = new SPE.Group({
+        // Give the particles in this group a texture
+        texture: self.particleTexture,
+        maxAge: 1 // How long should the particles live for? Measured in seconds.
+    });
+//    this.particleGroup = this.args.pg;
+    var particleEmitter = new SPE.Emitter({
+
+        type: 'sphere',
+        radius: 1,
+        speed: 30,
+        sizeStart: 15,
+        sizeStartSpread: 15,
+        sizeEnd: 0,
+        opacityStart: 1,
+        opacityEnd: 0,
+        colorStart: this.args.beatBlastColor,
+        colorStartSpread: new THREE.Vector3(0, 10, 0),
+        colorEnd: new THREE.Color('white'),
+        particleCount: 1000,
+        alive: 0,
+        duration: 0.05
+    });
+    this.particleGroup.addPool( 10, particleEmitter, false );
+
+    this.basicScene.scene.add(this.particleGroup.mesh);
+
 }
 
 
 Character.prototype.loadMesh = function(geometry, material) {
-    this.mesh = new Physijs.BoxMesh(
+    var physMaterial = new Physijs.createMaterial(new THREE.MeshFaceMaterial(material), 0.5, 0.5); 
+    this.mesh = new Physijs.CapsuleMesh(
         geometry,
-        new THREE.MeshFaceMaterial(material),
+        physMaterial,
         this.args.init_mass // mass
     );
     this.mesh.position.set(this.args.position.x, this.args.position.y, this.args.position.z);
-    this.mesh.scale.set( 1.5, 1.5,  1.5);
+//    this.mesh.scale.set( 2, 2,  2);
+////
+//    this.mesh.visible = false;
 
     this.basicScene.scene.add(this.mesh);
 
     // Apply initial position impulse
-    //this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
+    this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
 
 }
 
 Character.prototype.onBeatUpdate = function(){
     var self = this;
 
-    var G = 100000;
+    var G = 10000;
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -98,7 +114,7 @@ Character.prototype.onBeatUpdate = function(){
 
         var m1m2 = 0;
         if(others[i].lastBeat && self.lastBeat){
-            m1m2 = (self.lastBeat * self.lastBeat * self.lastBeat)/ (others[i].lastBeat * others[i].lastBeat * others[i].lastBeat )
+            m1m2 = (self.lastBeat)/ (others[i].lastBeat )
         }
         if(self.id == 2){
 //            console.log('m1m2 = ', m1m2);
@@ -172,73 +188,13 @@ function getRandomNumber( base ) {
 
 Character.prototype.fireParticles = function(){
     var self = this;
-    if(!self.mesh || !self.particleGroup){
+    if(!self.mesh || !this.particleGroup){
         return;
     }
 
-    var particelsColor = this.args.particels_color;
-
     console.log('fireParticles ', self.mesh.position)
+    this.particleGroup.triggerPoolEmitter(1, self.mesh.position);
 
-    if(this.particleGroup){
-//        this.basicScene.scene.remove(this.particleGroup.mesh)
-    }
-
-    this.particleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
-    this.particleGroup = new SPE.Group({
-        // Give the particles in this group a texture
-        texture: self.particleTexture,
-        maxAge: 2 // How long should the particles live for? Measured in seconds.
-    });
-
-
-//    this.mesh.visible = false;
-
-    this.particleEmitter = new SPE.Emitter({
-       position: new THREE.Vector3(
-            self.mesh.position.x,
-            self.mesh.position.y,
-            self.mesh.position.z
-        ),
-        type: 'sphere',
-        radius: 20,
-
-        accelerationSpread: new THREE.Vector3(
-            getRandomNumber(-10),
-            getRandomNumber(-10),
-            getRandomNumber(-10)
-        ),
-
-        velocitySpread: new THREE.Vector3(
-            getRandomNumber(20),
-            getRandomNumber(20),
-            getRandomNumber(20)
-        ),
-
-        colorStart: (new THREE.Color()).setRGB(
-            Math.random(),
-            Math.random(),
-            Math.random()
-        ),
-        colorEnd: (new THREE.Color()).setRGB(
-            Math.random(),
-            Math.random(),
-            Math.random()
-        ),
-        sizeStart: 50,
-        sizeEnd: 50,
-
-        particleCount: 500,
-
-        opacityStart: 0,
-        opacityMiddle: 1,
-        opacityEnd: 0
-    });
-
-    // Add the emitter to the group.
-    this.particleGroup.addEmitter(this.particleEmitter);
-    console.log(this.particleTexture);
-    this.basicScene.scene.add(this.particleGroup.mesh);
 
 //    setTimeout(function(){
 //        self.particleEmitter.alive = 0;
@@ -302,7 +258,7 @@ Character.prototype.onTick = function(delta){
     if (this.mesh) {
 
         if(this.particleGroup){
-            this.particleGroup.tick(delta);
+            this.particleGroup.tick();
         }
 
         this.onBeatUpdate();
