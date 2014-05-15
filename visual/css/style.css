@@ -16,24 +16,36 @@ p {
 p.small {
     font-size: 0.8em;
 }
-
-.numParticles {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: white;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+@font-face {
+    font-family:"space invaders Regular";
+    src:url("/font/space_invaders.eot?") format("eot"), url("/font/space_invaders.woff") format("woff"), url("/font/space_invaders.ttf") format("truetype"), url("/font/space_invaders.svg#Space-Invaders") format("svg");
+    font-weight:normal;font-style:normal;
 }
 
-.alive-wrapper {
+#bpm-container {
+    height: 40px;
+    width: 800px;
     position: absolute;
-    top: 2em;
-    width: 25em;
-    left: 50%;
-    margin-left: -12.5em;
-    text-align: center;
-    padding: 1em;
-    background-color: rgba( 255, 255, 255, 0.15 );
-    border-radius: 1em;
-    border: 1px solid rgba( 255, 255, 255, 0.3 );
+    top: 100px;
+    left: 20px;
+}
+.bpm-value {
+    float: left;
+    display: inline;
+    margin-right: 50px;
+    font-family: "space invaders Regular";
+    font-size: 48px;
+}
+
+#bpm0 {
+    color: red;
+}
+#bpm1 {
+    color: green;
+}
+#bpm2 {
+    color: blue;
+}
+#bpm3 {
+    color: yellow;
 }
