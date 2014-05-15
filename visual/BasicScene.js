@@ -65,7 +65,7 @@ BasicScene.prototype.init = function () {
         id:0,
         init_mass:0.1,
         position: new THREE.Vector3(-50, 50, -200),
-        impulse: new THREE.Vector3(0, 0, 0),
+        impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('red')
     });
     this.user2 = new Character({
@@ -75,7 +75,7 @@ BasicScene.prototype.init = function () {
         id:1,
         init_mass:0.1,
         position: new THREE.Vector3(-70, -50, -200),
-        impulse: new THREE.Vector3(0, 0, 0),
+        impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('green')
     });
 
@@ -87,7 +87,7 @@ BasicScene.prototype.init = function () {
         id:2,
         init_mass:0.1,
         position: new THREE.Vector3(100, 50, -200),
-        impulse: new THREE.Vector3(0, 0, 0),
+        impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('blue')
     });
 
@@ -98,7 +98,7 @@ BasicScene.prototype.init = function () {
         id:3,
         init_mass:0.1,
         position: new THREE.Vector3(70, -50, -200),
-        impulse: new THREE.Vector3(0, 0, 0),
+        impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('yellow')
     });
 
@@ -174,13 +174,14 @@ BasicScene.prototype.frame = function () {
     this.user3.onTick(this.clock.getDelta());
     this.user4.onTick(this.clock.getDelta());
 
-/*
+
     if (this.user1.mesh) {
         var diff = this.user1.mesh.position.z - this.distance;
         this.camera.position.z += diff;
         this.distance += diff;
+        this.starField.starFieldGroup.mesh.position.z += diff
 
-    }*/
+    }
 
     //this.centeroidMesh.position = this.getCharactersCenter();
 
