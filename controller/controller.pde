@@ -1,4 +1,4 @@
-import http.requests.*;
+  import http.requests.*;
 
 /*
 THIS PROGRAM WORKS WITH PulseSensorAmped_Arduino-xx ARDUINO CODE
@@ -41,7 +41,7 @@ void setup() {
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",8000);
+  myRemoteLocation = new NetAddress("192.168.111.23",8000);
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -66,34 +66,38 @@ void setup() {
   beatSim3 = new BeatSimulator(2, 857, 70);
   beatSim4 = new BeatSimulator(3, 1000, 60);
 //  
-  beatSim1.start();   
-  beatSim2.start();
+//  beatSim1.start();   
+//  beatSim2.start();
   beatSim3.start();
   beatSim4.start();  
 }
 
 void draw() {
     background(204);
-    beatSim1.update();
-    beatSim2.update();
+//    beatSim1.update();
+//    beatSim2.update();
     beatSim3.update();
     beatSim4.update();  
 }
 
 void mouseReleased() {
-    beatSim1.onMouseReleased();
-    beatSim2.onMouseReleased();
+//    beatSim1.onMouseReleased();
+//    beatSim2.onMouseReleased();
     beatSim3.onMouseReleased();    
     beatSim4.onMouseReleased();    
 }
   
 
 void heartBeat(int index, int bpm) {
-  players[index].beat(bpm);  
+  if (index < NUMBER_OF_PLAYERS) {
+    players[index].beat(bpm);  
+  }
 }
 
 void ibiData(int index, int IBI) {
-  players[index].setIBI(IBI);
+  if (index < NUMBER_OF_PLAYERS) {
+    players[index].setIBI(IBI);
+  }  
 }
 
 

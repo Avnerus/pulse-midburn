@@ -105,7 +105,7 @@ class Player {
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("synthfreq3", _lastBPM - 10);
+      sendPrg("synthfreq3", _lastBPM - 20);
         
                    
       /*int[] chord = new int[LEAD_PROG.length];
@@ -124,7 +124,7 @@ class Player {
     }
     else if (_role == VOICE_ROLE) {
       sendPrg("synthfreq4", _lastBPM);
-      sendPrg("synthfreq4-1", _lastBPM - 10);
+      sendPrg("synthfreq4-1", _lastBPM - 40);
       if (_alternator % 2 == 0) {
           _changeBuffer += change;        
           int[] chord = {42};          
