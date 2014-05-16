@@ -78,7 +78,11 @@ Character.prototype.initParticles = function(){
     });
     this.particleGroup.addPool(10, particleEmitter, false);
 
-    this.basicScene.scene.add(this.particleGroup.mesh);
+//    this.basicScene.scene.add(this.particleGroup.mesh);
+}
+
+function getRandomNumber( base ) {
+    return Math.random() * base - (base/2);
 }
 
 Character.prototype.initRiseParticles = function(){
@@ -87,28 +91,46 @@ Character.prototype.initRiseParticles = function(){
     this.riseParticleTexture = THREE.ImageUtils.loadTexture('/image/smokeparticle.png');
     this.riseParticleGroup = new SPE.Group({
         texture: self.riseParticleTexture,
-        maxAge: 1
+        maxAge: 3
     });
 
     var particleEmitter = new SPE.Emitter({
-        type: 'sphere',
-        radius: 10,
-        speed: 30,
-        sizeStart: 8,
-        sizeStartSpread: 8,
-        sizeEnd: 0,
+        type: 'cube',
+
+        positionSpread: new THREE.Vector3(0, 0, 0),
+
+        acceleration: new THREE.Vector3(0, 120, 0),
+//        accelerationSpread: new THREE.Vector3( 0, 0, 0 ),
+        accelerationSpread: new THREE.Vector3(
+         50,
+           50,
+         50
+        ),
+
+        velocity: new THREE.Vector3(0, 0, 0),
+//        velocitySpread: new THREE.Vector3(0, 0, 0),
+//        velocitySpread: new THREE.Vector3(
+//            getRandomNumber(20),
+//            getRandomNumber(20),
+//            getRandomNumber(20)
+//        ),
+
+        sizeStart: 10,
+        sizeStartSpread: 10,
+        sizeEnd: 2,
+
         opacityStart: 1,
         opacityEnd: 0,
+
         colorStart: this.args.beatBlastColor,
-        colorStartSpread: new THREE.Vector3(123, 10, 65),
+        colorStartSpread: new THREE.Vector3(2 ,2, 2),
         colorEnd: new THREE.Color('white'),
-        particleCount: 1500,
+
+        particleCount: 2000,
         alive: 0,
-        duration: 0.07
+        duration: 3
     });
     this.riseParticleGroup.addPool(10, particleEmitter, false);
-
-    this.basicScene.scene.add(this.riseParticleGroup.mesh);
 }
 
 Character.prototype.loadMesh = function(geometry, material) {
@@ -127,6 +149,10 @@ Character.prototype.loadMesh = function(geometry, material) {
 
     // Apply initial position impulse
     this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
+
+    this.mesh.add(this.riseParticleGroup.mesh);
+
+    this.mesh.add(this.particleGroup.mesh);
 }
 
 Character.prototype.onBeatUpdate = function(){
@@ -185,8 +211,8 @@ Character.prototype.fireRiseParticles = function(){
 //
 //    pos.multiplyScalar(50);
 
-    this.riseParticleGroup.triggerPoolEmitter(1, self.mesh.position);
-    console.log('fireRiseParticles ', pos)
+    this.updateLocationGroup = this.riseParticleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
+    console.log('fireRiseParticles ', p)
 }
 
 Character.prototype.fireParticles = function(){
@@ -195,7 +221,7 @@ Character.prototype.fireParticles = function(){
         return;
     }
 
-    this.particleGroup.triggerPoolEmitter(1, self.mesh.position);
+    this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
     //    console.log('fireParticles ', self.mesh.position)
 }
 
@@ -229,6 +255,9 @@ Character.prototype.onTick = function(delta){
         if(this.riseParticleGroup){
             this.riseParticleGroup.tick();
         }
+//        if(!this.updateLocationGroup){
+//            this.updateLocationGroup.mesh.position = this.mesh.position;
+//        }
         this.onBeatUpdate();
     }
 }
