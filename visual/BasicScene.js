@@ -155,14 +155,13 @@ BasicScene.prototype.getOtherCharacter = function(excludeId){
 // Update and draw the scene
 BasicScene.prototype.frame = function () {
 
-
     if (this.characters[0].mesh) {
         for (var i = 0; i < this.characters.length; i++) {
             this.characters[i].onTick(this.clock.getDelta);
         }
         var averageDepth = this.getAverageDepth();
         this.camera.position = new THREE.Vector3(0, 0, averageDepth + 200);
- ;
+
         this.starField.starFieldGroup.mesh.position = new THREE.Vector3(0, 0, averageDepth + 100);
         this.sphere.position = new THREE.Vector3(0,0, averageDepth);
 
