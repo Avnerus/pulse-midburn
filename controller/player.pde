@@ -29,8 +29,7 @@ class Player {
   
   void beat(int bpm) {
      //println("Player" + _index + " beats at " + bpm);
-     updateServer(_index, bpm);
-     
+  
      int change = 0;
      
      if (bpm == _lastBPM) {
@@ -48,15 +47,9 @@ class Player {
      
      _alternator++;
      
-     
+     updateServer(_index, bpm, change);
   }
     
-  void changeDown() {
-       int newScale = int(random(SCALES.length));
-       println("Bass change - chaning scale");
-       CURRENT_SCALE = SCALES[newScale];
-  }
-  
   void play(int change) {
      //int[] chord2 = {int(random(48, 61))};
     if (_role == BASS_ROLE) {
