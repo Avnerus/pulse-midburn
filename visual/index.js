@@ -25,3 +25,10 @@ function animate() {
 animate();
 
 require('./primus_util');
+this.eventEmitter = require('./events_util').getEventEmitter();
+
+
+this.eventEmitter.on('beat_update', function(args){
+    var elementId = "#bpm" + args.id;
+    $(elementId).text(args.beat);
+});

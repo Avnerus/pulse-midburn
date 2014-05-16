@@ -29,8 +29,7 @@ class Player {
   
   void beat(int bpm) {
      //println("Player" + _index + " beats at " + bpm);
-     updateServer(_index, bpm);
-     
+  
      int change = 0;
      
      if (bpm == _lastBPM) {
@@ -48,15 +47,9 @@ class Player {
      
      _alternator++;
      
-     
+     updateServer(_index, bpm, change);
   }
     
-  void changeDown() {
-       int newScale = int(random(SCALES.length));
-       println("Bass change - chaning scale");
-       CURRENT_SCALE = SCALES[newScale];
-  }
-  
   void play(int change) {
      //int[] chord2 = {int(random(48, 61))};
     if (_role == BASS_ROLE) {
@@ -105,26 +98,34 @@ class Player {
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("synthfreq3", _lastBPM - 10);
+      sendPrg("synthfreq3", _lastBPM - 20);
         
-                   
-      /*int[] chord = new int[LEAD_PROG.length];
-
-    
-      for (int i = 0; i < LEAD_PROG.length; i++) {
-        int note = scale[LEAD_PROG[i]] + LEAD_OCTAVE;
-        chord[i] = note;        
-      }     */
-     
-      int[] chord = new int[1];
-      int note = CURRENT_SCALE[_alternator % CURRENT_SCALE.length] + LEAD_OCTAVE;
-      note += (8 * change);
-      chord[0] = note;
-        sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
+      if (_alternator % 2 == 0) {
+          _changeBuffer += change;        
+          int[] chord = {45};          
+          sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
+      } else {
+          /*int[] chord2 = new int[VOICE_CHORD.length];
+          for (int i = 0; i < VOICE_CHORD.length; i++) {
+              int note = CURRENT_SCALE[VOICE_CHORD[i]] + VOICE_OCTAVE;
+              chord2[i] = note;        
+          } */         
+          
+          _changeBuffer += change;
+          
+              
+          int[] chord = new int[1];
+          int note = CURRENT_SCALE[_progressor % CURRENT_SCALE.length] + LEAD_OCTAVE;
+          note += (8 * change);
+          chord[0] = note;
+          sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
+          _progressor++;    
+      } 
+ 
     }
     else if (_role == VOICE_ROLE) {
       sendPrg("synthfreq4", _lastBPM);
-      sendPrg("synthfreq4-1", _lastBPM - 10);
+      sendPrg("synthfreq4-1", _lastBPM - 40);
       if (_alternator % 2 == 0) {
           _changeBuffer += change;        
           int[] chord = {42};          

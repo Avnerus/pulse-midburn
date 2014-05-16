@@ -11,6 +11,7 @@
     exports.updatePlayer = function(req, res, next) {
         var playerId = req.params.player_id;
         var bpm = req.body.bpm;
+        var change = req.body.change;
 
 //        console.log('/beat/:player_id ', ' playerId = ', playerId, ' req.body = ', req.body);
 
@@ -18,7 +19,8 @@
         primusServer.write({
             args:{
                 id:playerId,
-                beat:bpm
+                beat:bpm,
+                change:change
             },
             message:'beat_update'
         });
