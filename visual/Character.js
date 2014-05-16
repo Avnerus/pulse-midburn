@@ -146,6 +146,8 @@ Character.prototype.loadMesh = function(geometry, material) {
 //    this.mesh.visible = false;
 
     this.basicScene.scene.add(this.mesh);
+    this.lastBeat = 60;
+    this.onBeatUpdate();
 
     // Apply initial position impulse
     this.mesh.applyImpulse(this.args.impulse, this.getCentroid());
