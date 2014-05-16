@@ -28,7 +28,7 @@ class Player {
   }
   
   void beat(int bpm) {
-     //println("Player" + _index + " beats at " + bpm);
+     println("Player" + _index + " beats at " + bpm);
   
      int change = 0;
      

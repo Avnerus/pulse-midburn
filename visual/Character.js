@@ -72,9 +72,9 @@ Character.prototype.initParticles = function(){
         colorStart: this.args.beatBlastColor,
         colorStartSpread: new THREE.Vector3(0, 10, 0),
         colorEnd: new THREE.Color('white'),
-        particleCount: 300,
+        particleCount: 500,
         alive: 0,
-        duration: 0.008
+        duration: 0.05
     });
     this.particleGroup.addPool(10, particleEmitter, false);
 
@@ -200,19 +200,7 @@ Character.prototype.fireRiseParticles = function(){
         return;
     }
 
-//    var selfPos = self.mesh.position;
-//    var  pos = new THREE.Vector3(0, 0, 0);
-//    var others = this.basicScene.getOtherCharacter(self.id);
-//    for(var i = 0; i < others.length; i++){
-//        var v = mathUtil.subVectors(others[i].mesh.position, selfPos);
-//        v.normalize();
-//        pos = mathUtil.addVectors(pos, v);
-//    }
-//
-//    pos.multiplyScalar(50);
-
-    this.updateLocationGroup = this.riseParticleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
-    console.log('fireRiseParticles ', p)
+    this.riseParticleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
 }
 
 Character.prototype.fireParticles = function(){
@@ -221,8 +209,12 @@ Character.prototype.fireParticles = function(){
         return;
     }
 
+     
     this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
-    //    console.log('fireParticles ', self.mesh.position)
+    if (this.id == 0) {
+        
+        console.log('fireParticles ', self.mesh.position)
+    }
 }
 
 
