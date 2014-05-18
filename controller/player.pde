@@ -28,7 +28,7 @@ class Player {
   }
   
   void beat(int bpm) {
-     println("Player" + _index + " beats at " + bpm);
+     //println("Player" + _index + " beats at " + bpm);
   
      int change = 0;
      
@@ -55,7 +55,7 @@ class Player {
     if (_role == BASS_ROLE) {
       if (change != 0) {
           int newScale = int(random(SCALES.length));
-          println("Bass change - changing master scale");
+          //println("Bass change - changing master scale");
           CURRENT_SCALE = SCALES[newScale];
       }
           
@@ -105,21 +105,39 @@ class Player {
           int[] chord = {45};          
           sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
       } else {
-          /*int[] chord2 = new int[VOICE_CHORD.length];
-          for (int i = 0; i < VOICE_CHORD.length; i++) {
-              int note = CURRENT_SCALE[VOICE_CHORD[i]] + VOICE_OCTAVE;
-              chord2[i] = note;        
-          } */         
-          
           _changeBuffer += change;
-          
-              
-          int[] chord = new int[1];
-          int note = CURRENT_SCALE[_progressor % CURRENT_SCALE.length] + LEAD_OCTAVE;
-          note += (8 * change);
+ 
+          int[] chord = new int[3];
+          // Starting note
+          int startingNoteIndex = int(random(CURRENT_SCALE.length));
+          int note = CURRENT_SCALE[startingNoteIndex] + LEAD_OCTAVE;
+          int shouldInc = int(random(2));
+          int inc;
+          if (shouldInc == 1) {
+             inc = 1;
+          } else {
+            inc = -1;
+          }
+          println(inc);
           chord[0] = note;
+          
+          if (inc == -1 && startingNoteIndex < 2) {
+            startingNoteIndex = 2;
+          }
+  
+          int nextIndex = startingNoteIndex;
+          for (int i=0; i < 2; i++) {
+            nextIndex = (nextIndex + inc) % CURRENT_SCALE.length;
+            
+            note = CURRENT_SCALE[nextIndex] + LEAD_OCTAVE + _changeBuffer;
+            chord[1 + i] = note;
+          }        
+          chord[2] += _changeBuffer;
+    
+                 
+          _changeBuffer = 0;          
           sendChordWithLength("synth" + str(_index + 1),chord, _IBI);
-          _progressor++;    
+              
       } 
  
     }
