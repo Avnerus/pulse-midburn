@@ -158,6 +158,9 @@ Character.prototype.loadMesh = function(geometry, material) {
 }
 
 Character.prototype.onBeatUpdate = function(){
+    if (!this.mesh) {
+        return;
+    }
     var self = this;
 
     var G = 10000;
@@ -165,19 +168,21 @@ Character.prototype.onBeatUpdate = function(){
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
     for(var i = 0; i < others.length; i++){
-        var v = mathUtil.subVectors(others[i].mesh.position, this.mesh.position);
-        v.normalize();
+        if (others[i].mesh) {
+            var v = mathUtil.subVectors(others[i].mesh.position, this.mesh.position);
+            v.normalize();
 
-        var m1m2 = 0;
-        if(others[i].lastBeat && self.lastBeat){
-            m1m2 = (self.lastBeat)/ (others[i].lastBeat )
+            var m1m2 = 0;
+            if(others[i].lastBeat && self.lastBeat){
+                m1m2 = (self.lastBeat)/ (others[i].lastBeat )
+            }
+
+            var r = others[i].mesh.position.distanceTo(this.mesh.position);
+            var scalar = G * (m1m2 / (r * r));
+            v.multiplyScalar(scalar);
+
+            normProjVectors.push(v);
         }
-
-        var r = others[i].mesh.position.distanceTo(this.mesh.position);
-        var scalar = G * (m1m2 / (r * r));
-        v.multiplyScalar(scalar);
-
-        normProjVectors.push(v);
     }
 
     // And one vector to be pulled towards the center
@@ -213,10 +218,6 @@ Character.prototype.fireParticles = function(){
 
      
     this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
-    if (this.id == 0) {
-        
-        console.log('fireParticles ', self.mesh.position)
-    }
 }
 
 

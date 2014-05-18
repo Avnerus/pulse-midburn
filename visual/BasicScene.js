@@ -178,7 +178,9 @@ BasicScene.prototype.getAverageDepth = function() {
     // The average depth of all the characters
     var z = 0;
     for(var i = 0; i < this.characters.length; i++){
-        z += this.characters[i].mesh.position.z;
+        if (this.characters[i].mesh) {
+            z += this.characters[i].mesh.position.z;
+        }
     }
      return z / this.characters.length;
 }
