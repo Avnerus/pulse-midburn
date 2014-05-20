@@ -21,7 +21,7 @@ function StarField(opts) {
 
 StarField.prototype.initParticles = function() {
     this.starFieldGroup = new SPE.Group({
-        texture: THREE.ImageUtils.loadTexture('/image/star.png'),
+        texture: THREE.ImageUtils.loadTexture('/image/spark.png'),
         maxAge: 2,
         blending: THREE.AdditiveBlending
     });
