@@ -47,9 +47,9 @@ typedef volatile struct {
   // these variables are volatile because they are used during the interrupt service routine!
   volatile int BPM;                   // used to hold the pulse rate
   volatile int Signal;                // holds the incoming raw data
-  volatile int IBI = 600;             // holds the time between beats, must be seeded! 
-  volatile boolean Pulse = false;     // true when pulse wave is high, false when it's low
-  volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
+  volatile int IBI;             // holds the time between beats, must be seeded! 
+  volatile boolean Pulse;     // true when pulse wave is high, false when it's low
+  volatile boolean QS;        // becomes true when Arduoino finds a beat.
 } PulseData;
 
 PulseData sensorsData[NUMBER_OF_SENSORS];
