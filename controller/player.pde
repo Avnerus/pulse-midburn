@@ -69,7 +69,7 @@ class Player {
     }    
     else if (_role == AMBIENT_ROLE) {
       sendPrg("beatfreq2", _lastBPM);
-      sendPrg("synthfreq2", _lastBPM - 10);      
+      sendPrg("synthfreq2", _lastBPM - 20);      
       int[] chord = {38};
       if (_alternator %2 == 0) {
           int[] chord2 = new int[AMBIENT_CHORD.length];
