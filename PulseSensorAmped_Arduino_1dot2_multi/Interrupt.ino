@@ -1,14 +1,14 @@
     
 typedef volatile struct  {
   volatile int rate[10];                    // array to hold last ten IBI values
-  volatile unsigned long sampleCounter = 0;          // used to determine pulse timing
-  volatile unsigned long lastBeatTime = 0;           // used to find IBI
-  volatile int P =512;                      // used to find peak in pulse wave, seeded
-  volatile int T = 512;                     // used to find trough in pulse wave, seeded
-  volatile int thresh = 512;                // used to find instant moment of heart beat, seeded
-  volatile int amp = 100;                   // used to hold amplitude of pulse waveform, seeded
-  volatile boolean firstBeat = true;        // used to seed rate array so we startup with reasonable BPM
-  volatile boolean secondBeat = false;      // used to seed rate array so we startup with reasonable BPM
+  volatile unsigned long sampleCounter;          // used to determine pulse timing
+  volatile unsigned long lastBeatTime;           // used to find IBI
+  volatile int P;                      // used to find peak in pulse wave, seeded
+  volatile int T;                     // used to find trough in pulse wave, seeded
+  volatile int thresh;                // used to find instant moment of heart beat, seeded
+  volatile int amp;                   // used to hold amplitude of pulse waveform, seeded
+  volatile boolean firstBeat;        // used to seed rate array so we startup with reasonable BPM
+  volatile boolean secondBeat;      // used to seed rate array so we startup with reasonable BPM
 } PulseState;
 
 PulseState sensorsState[NUMBER_OF_SENSORS];
