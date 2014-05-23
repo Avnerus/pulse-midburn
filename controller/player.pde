@@ -118,7 +118,7 @@ class Player {
           } else {
             inc = -1;
           }
-          println(inc);
+          //println(inc);
           chord[0] = note;
           
           if (inc == -1 && startingNoteIndex < 2) {
