@@ -41,7 +41,7 @@ void setup() {
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("192.168.111.26",8000);
+  myRemoteLocation = new NetAddress("192.168.111.23",8000);
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -74,8 +74,8 @@ void setup() {
 
 void draw() {
     background(204);
-    beatSim1.update();
-    beatSim2.update();
+//    beatSim1.update();
+//    beatSim2.update();
     beatSim3.update();
     beatSim4.update();  
 }

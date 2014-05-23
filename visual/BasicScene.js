@@ -11,20 +11,20 @@ var NUMBER_OF_PLAYERS = 4;
 
 var PLAYERS_DATA = [
     {
-        model: 'models/pulsechar.js',
+        model: 'models/pulsechar1.js',
         position: new THREE.Vector3(-50, 50, -200),
         impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('red')
     },
     {
-        model: 'models/pulsechar.js',
+        model: 'models/pulsechar2.js',
         position: new THREE.Vector3(-70, -50, -200),
         impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('green')
 
     },
     {
-        model: 'models/pulsechar.js',
+        model: 'models/pulsechar3.js',
         position: new THREE.Vector3(100, 50, -200),
         impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('blue')
@@ -32,6 +32,7 @@ var PLAYERS_DATA = [
     },
     {
 
+        model: 'models/pulsechar4.js',
         position: new THREE.Vector3(70, -50, -200),
         impulse: new THREE.Vector3(0, 0, -10),
         beatBlastColor:new THREE.Color('yellow')
@@ -97,7 +98,7 @@ BasicScene.prototype.init = function () {
     this.characters = [];
     for (var i = 0; i < NUMBER_OF_PLAYERS; i++) {
         var user = new Character({
-            model: 'models/pulsechar.js',
+            model: PLAYERS_DATA[i].model,
             color: 0xFFFFFF,
             basic_scene:this,
             id: i,
