@@ -191,7 +191,9 @@ Character.prototype.onBeatUpdate = function(){
     var distanceToCenter = this.mesh.position.distanceTo(centerPosition);
     var vToCenter = mathUtil.subVectors(centerPosition, this.mesh.position);
     vToCenter.normalize();
-    var centerForce = distanceToCenter * distanceToCenter * 0.001 
+    var centerForce = 
+        THREE.Math.clamp(distanceToCenter * distanceToCenter * 0.001, 0, MAX_CENTER_FORCE);
+
     //console.log("CenterForce = " + centerForce);
     vToCenter.multiplyScalar(centerForce);
     normProjVectors.push(vToCenter);

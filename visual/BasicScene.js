@@ -4,7 +4,6 @@
 
 'use strict';
 var mathUtil = require('./math_util');
-require('./controls/OrbitControls');
 
 
 var NUMBER_OF_PLAYERS = 4;
@@ -72,8 +71,7 @@ BasicScene.prototype.init = function () {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 10000);
     this.camera.position.set(0, 0, 50);
 
-   	var controls = new THREE.OrbitControls(this.camera );
-    //controls.target.z = 150;
+//   	var controls = new THREE.OrbitControls(this.camera );
 
     this.scene.add(this.camera);
 
