@@ -19,5 +19,5 @@ int[] VOICE_PROG = {0, 2, 5, 6};
 public static final int BASS_OCTAVE = 48;
 public static final int LEAD_OCTAVE = 48;
 public static final int AMBIENT_OCTAVE = 48;
-public static final int VOICE_OCTAVE = 60;
+public static final int VOICE_OCTAVE = 72;
 

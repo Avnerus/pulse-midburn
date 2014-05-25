@@ -9,6 +9,7 @@ var TWEEN = require('tween.js');
 var mathUtil = require('./math_util');
 
 var MAX_CENTER_FORCE = 10;
+var MAX_PLAYER_FORCE = 20;
 
 function Character(args){
     this.init(args);
@@ -180,6 +181,8 @@ Character.prototype.onBeatUpdate = function(){
 
             var r = others[i].mesh.position.distanceTo(this.mesh.position);
             var scalar = G * (m1m2 / (r * r));
+            scalar = 
+        THREE.Math.clamp(scalar, 0, MAX_PLAYER_FORCE);
             v.multiplyScalar(scalar);
 
             normProjVectors.push(v);

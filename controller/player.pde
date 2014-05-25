@@ -98,7 +98,7 @@ class Player {
     }
     else if (_role == LEAD_ROLE) {      
       // Freq change      
-      sendPrg("synthfreq3", _lastBPM - 20);
+      sendPrg("synthfreq3", _lastBPM - 30);
         
       if (_alternator % 2 == 0) {
           _changeBuffer += change;        
@@ -114,15 +114,15 @@ class Player {
           int shouldInc = int(random(2));
           int inc;
           if (shouldInc == 1) {
-             inc = 1;
+             inc = 2;
           } else {
-            inc = -1;
+            inc = -2;
           }
           //println(inc);
           chord[0] = note;
           
-          if (inc == -1 && startingNoteIndex < 2) {
-            startingNoteIndex = 2;
+          if ((startingNoteIndex + (2 * inc) < 0)) {
+            startingNoteIndex = inc * -3;
           }
   
           int nextIndex = startingNoteIndex;
@@ -144,26 +144,29 @@ class Player {
     else if (_role == VOICE_ROLE) {
       sendPrg("synthfreq4", _lastBPM);
       sendPrg("synthfreq4-1", _lastBPM - 40);
+      if (_alternator % 4 == 0) {
+                  
+          _changeBuffer += change;
+          
+          int[] chord2 = new int[1];
+          int note = CURRENT_SCALE[0] + VOICE_OCTAVE;
+          note += (12 * _changeBuffer);          
+          chord2[0] = note;
+          _changeBuffer = 0;
+          sendChordWithLength("synth" + str(_index + 1),chord2, _IBI * 2);   
+          _progressor++;
+
+      }
       if (_alternator % 2 == 0) {
-          _changeBuffer += change;        
-          int[] chord = {42};          
-          sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
-      } else {
           /*int[] chord2 = new int[VOICE_CHORD.length];
           for (int i = 0; i < VOICE_CHORD.length; i++) {
               int note = CURRENT_SCALE[VOICE_CHORD[i]] + VOICE_OCTAVE;
               chord2[i] = note;        
-          } */         
-          
-          _changeBuffer += change;
-          
-          int[] chord2 = new int[1];
-          int note = CURRENT_SCALE[VOICE_PROG[_progressor % VOICE_PROG.length]] + VOICE_OCTAVE;
-          note += (8 * _changeBuffer);          
-          chord2[0] = note;
-          _changeBuffer = 0;
-          sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);   
-          _progressor++;
+          } */   
+           _changeBuffer += change;        
+          int[] chord = {44};          
+          sendChordWithLength("beat" + str(_index + 1), chord, _IBI);      
+
     
       }  
      
