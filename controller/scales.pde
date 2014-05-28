@@ -8,7 +8,7 @@ int[][] SCALES =  {
 
 int[] LEAD_PROG = {0, 2 , 4};
 
-int[] AMBIENT_CHORD = {0, 4, 7,};// 8, 12, 14};
+int[] AMBIENT_CHORD = {0, 7};// 8, 12, 14};
 int[] AMBIENT_RISE = {14,13};
 int[] AMBIENT_FALL = {10,12};
 

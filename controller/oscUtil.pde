@@ -38,6 +38,33 @@ void sendChordWithLength(String message, int[] notes, int chordLength) {
   oscP5.send(stopBundle, myRemoteLocation);
 }
 
+void sendNote(String message, int note) {
+  int velocity = 80;
+  int on = 1;
+  int off = 0;
+
+  OscMessage paramsMsg = new OscMessage("/params");
+  OscMessage noteMsg = new OscMessage("/" + message);
+
+  OscBundle startBundle = new OscBundle();
+
+  // Start
+  
+  paramsMsg.clear();
+  paramsMsg.setAddrPattern("/params" + 0);
+  paramsMsg.add(note);
+  paramsMsg.add(velocity);
+  startBundle.add(paramsMsg);
+     
+
+  noteMsg.clear();    
+  noteMsg.setAddrPattern("/" + message + "-" + 0);
+  startBundle.add(noteMsg);
+  
+  oscP5.send(startBundle, myRemoteLocation);  
+}
+
+
 void sendPrg(String message, int value) {
   OscMessage prgMsg = new OscMessage(message); 
   prgMsg.add(value);    

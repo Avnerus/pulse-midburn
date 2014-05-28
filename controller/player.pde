@@ -62,7 +62,7 @@ class Player {
       int[] chord = {36};
       int[] chord2 = {CURRENT_SCALE[0] + BASS_OCTAVE};   
       
-      sendChordWithLength("beat" + str(_index + 1), chord, _IBI);
+      sendNote("beat" + str(_index + 1), 36);
       if (_alternator % 2 != 0) {     
           sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);        
       }
@@ -109,9 +109,11 @@ class Player {
  
           int[] chord = new int[3];
           // Starting note
-          int startingNoteIndex = int(random(CURRENT_SCALE.length));
+          //int startingNoteIndex = int(random(CURRENT_SCALE.length));
+          int startingNoteIndex = 0;
           int note = CURRENT_SCALE[startingNoteIndex] + LEAD_OCTAVE;
-          int shouldInc = int(random(2));
+          int shouldInc = 1;
+         // int shouldInc = int(random(2));
           int inc;
           if (shouldInc == 1) {
              inc = 2;
@@ -126,13 +128,13 @@ class Player {
           }
   
           int nextIndex = startingNoteIndex;
-          for (int i=0; i < 2; i++) {
+          for (int i=0; i < 1; i++) {
             nextIndex = (nextIndex + inc) % CURRENT_SCALE.length;
             
             note = CURRENT_SCALE[nextIndex] + LEAD_OCTAVE + _changeBuffer;
             chord[1 + i] = note;
           }        
-          chord[2] += _changeBuffer;
+          chord[1] += _changeBuffer;
     
                  
           _changeBuffer = 0;          
