@@ -53,9 +53,9 @@ void setup() {
 // GO FIND THE ARDUINO
   println(Serial.list());    // print a list of available serial ports
   // choose the number between the [] that is connected to the Arduino
-  port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
+/*  port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
   port.clear();            // flush buffer
-  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return
+  port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return*/
   
   CURRENT_SCALE = SCALES[0];
   
@@ -65,7 +65,7 @@ void setup() {
   beatSim2 = new BeatSimulator(1, 882, 68);  
   beatSim3 = new BeatSimulator(2, 857, 70);
   beatSim4 = new BeatSimulator(3, 1000, 60);
-//  
+//   
   beatSim1.start();   
   beatSim2.start();
   beatSim3.start();
