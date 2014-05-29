@@ -8,7 +8,7 @@
 var TWEEN = require('tween.js');
 var mathUtil = require('./math_util');
 
-var MAX_CENTER_FORCE = 10;
+var MAX_CENTER_FORCE = 20;
 var MAX_PLAYER_FORCE = 20;
 
 function Character(args){

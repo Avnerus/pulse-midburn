@@ -41,7 +41,7 @@ void setup() {
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",8000);
+  myRemoteLocation = new NetAddress("192.168.111.24",8000);
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {

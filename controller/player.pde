@@ -155,7 +155,7 @@ class Player {
           note += (12 * _changeBuffer);          
           chord2[0] = note;
           _changeBuffer = 0;
-          sendChordWithLength("synth" + str(_index + 1),chord2, _IBI * 2);   
+          sendChordWithLength("synth" + str(_index + 1),chord2, _IBI);   
           _progressor++;
 
       }
