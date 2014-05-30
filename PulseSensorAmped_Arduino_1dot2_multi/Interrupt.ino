@@ -1,3 +1,5 @@
+
+int THRESHOLD = 650;
     
 typedef volatile struct  {
   volatile int rate[10];                    // array to hold last ten IBI values
@@ -23,9 +25,9 @@ void interruptSetup(){
   sei();             // MAKE SURE GLOBAL INTERRUPTS ARE ENABLED      
   
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
-      sensorsState[i].thresh = 512;                          // set thresh default
-      sensorsState[i].P = 512;                               // set P default
-      sensorsState[i].T = 512;                               // set T default
+      sensorsState[i].thresh = THRESHOLD;                          // set thresh default
+      sensorsState[i].P = THRESHOLD;                               // set P default
+      sensorsState[i].T = THRESHOLD;                               // set T default
       sensorsState[i].lastBeatTime = 0;
       sensorsState[i].sampleCounter = 0;      
       sensorsState[i].amp = 100;      
@@ -41,9 +43,10 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
     sensorsData[i].Signal = analogRead(i);                     // read the Pulse Sensor 
     sensorsState[i].sampleCounter += 2;                         // keep track of the time in mS with this variable
+    
     int N = sensorsState[i].sampleCounter - sensorsState[i].lastBeatTime;       // monitor the time since the last beat to avoid noise
   
-      //  find the peak and trough of the pulse wave
+     //  find the peak and trough of the pulse wave
     if(sensorsData[i].Signal < sensorsState[i].thresh && N > (sensorsData[i].IBI/5)*3){       // avoid dichrotic noise by waiting 3/5 of last IBI
       if (sensorsData[i].Signal < sensorsState[i].T){                        // T is the trough
         sensorsState[i].T = sensorsData[i].Signal;                         // keep track of lowest point in pulse wave 
@@ -56,7 +59,7 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
   
     //  NOW IT'S TIME TO LOOK FOR THE HEART BEAT
     // signal surges up in value every time there is a pulse
-    if (N > 250){                                   // avoid high frequency noise
+    if (N > 300){                                   // avoid high frequency noise
       if ( (sensorsData[i].Signal > sensorsState[i].thresh) && (sensorsData[i].Pulse == false) && (N > (sensorsData[i].IBI/5)*3) ){        
         sensorsData[i].Pulse = true;                 // set the Pulse flag when we think there is a pulse
 //        digitalWrite(blinkPin,HIGH);                // turn on pin 13 LED
@@ -104,9 +107,9 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
     }
   
     if (N > 2500){                           // if 2.5 seconds go by without a beat
-      sensorsState[i].thresh = 512;                          // set thresh default
-      sensorsState[i].P = 512;                               // set P default
-      sensorsState[i].T = 512;                               // set T default
+      sensorsState[i].thresh = THRESHOLD;                // set thresh default
+      sensorsState[i].P = THRESHOLD;                               // set P default
+      sensorsState[i].T = THRESHOLD;                               // set T default
       sensorsState[i].lastBeatTime = sensorsState[i].sampleCounter;          // bring the lastBeatTime up to date        
       sensorsState[i].firstBeat = true;                      // set these to avoid noise
       sensorsState[i].secondBeat = false;                    // when we get the heartbeat back

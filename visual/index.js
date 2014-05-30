@@ -32,3 +32,8 @@ this.eventEmitter.on('beat_update', function(args){
     var elementId = "#bpm" + args.id;
     $(elementId).text(args.beat);
 });
+
+this.eventEmitter.on('noSignal', function(args){
+    var elementId = "#bpm" + args.id;
+    $(elementId).text("??");
+});

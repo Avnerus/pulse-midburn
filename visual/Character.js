@@ -24,6 +24,7 @@ Character.prototype.init = function (args) {
     this.color = args.color;
     this.args = args;
     this.trigger = true;
+    this.lastBeatTime = 0;
 
     console.log('Character init: id = ', this.id);
 
@@ -51,6 +52,13 @@ Character.prototype.init = function (args) {
             }
         }
     });
+
+    this.signalCheck = setInterval(function() {
+        var d = new Date();
+        if (d.getTime() - self.lastBeatTime >= 5000) {
+            self.eventEmitter.emit("noSignal", {id: self.id});
+        }
+    },5000);
 }
 
 Character.prototype.initParticles = function(){
@@ -223,6 +231,9 @@ Character.prototype.fireParticles = function(){
     if(!self.mesh || !self.particleGroup){
         return;
     }
+    var d = new Date();
+    this.lastBeatTime = d.getTime();
+
 
      
     this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
