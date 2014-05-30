@@ -28,26 +28,37 @@ class Player {
   }
   
   void beat(int bpm) {
-     //println("Player" + _index + " beats at " + bpm);
+    println("Player" + _index + " beats at " + bpm);
   
+     if (bpm >= 130 || bpm <= 50) {
+       return;
+     }
      int change = 0;
      
      if (bpm == _lastBPM) {
-       _steadyBPMCount++;
+       println("No change");
+       _steadyBPMCount++;       
+         this.play(change);
+         updateServer(_index, bpm, change);   
+         _alternator++;     
+
      } else {
+       
        // A change in BPM!
-       if (_steadyBPMCount >= 1) {
+       if (_steadyBPMCount >= 0) {
          // A meaningfull change
-          change = bpm - _lastBPM;         
-       } 
-       _steadyBPMCount = 0;
-       _lastBPM = bpm;     
+          change = bpm - _lastBPM;
+          println("Change: " + change);
+          if (change < 10) {           
+           this.play(change);
+           _alternator++;     
+            updateServer(_index, bpm, change);
+            _steadyBPMCount = 0;
+           }            
+       }          
      }
-     this.play(change);
-     
-     _alternator++;
-     
-     updateServer(_index, bpm, change);
+      _lastBPM = bpm;    
+
   }
     
   void play(int change) {

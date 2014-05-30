@@ -13,11 +13,9 @@ void serialEvent(Serial port){
      if (SensorIndex > players.length -1) {
          return;
      }
-//     
-//     if (SensorIndex == 1) {
-//       println(inData);
-//     }
-  
+    
+    // println(inData);
+     
      if (inData.charAt(1) == 'S'){          // leading 'S' for sensor data
        inData = inData.substring(2);        // cut off the leading 'S'
        Sensor = int(inData);                // convert the string to usable int
@@ -26,7 +24,7 @@ void serialEvent(Serial port){
        inData = inData.substring(2);        // cut off the leading 'B'
        BPM = int(inData);                   // convert the string to usable int
        if (BPM <= 150) {         
-        //   heartBeat(SensorIndex, BPM);
+          heartBeat(SensorIndex, BPM);
        }
        
        

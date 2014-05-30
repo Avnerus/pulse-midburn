@@ -32,7 +32,7 @@ Avner Peled, 2014
 
 
 
-#define NUMBER_OF_SENSORS 2
+#define NUMBER_OF_SENSORS 4
 
 //  VARIABLES
 
