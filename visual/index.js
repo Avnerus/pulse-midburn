@@ -37,3 +37,10 @@ this.eventEmitter.on('noSignal', function(args){
     var elementId = "#bpm" + args.id;
     $(elementId).text("??");
 });
+
+
+this.refreshTimer = setInterval(function() {
+    window.location.reload(true);
+
+            
+},1000 * 60 * 3);

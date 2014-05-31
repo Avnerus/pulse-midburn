@@ -13,6 +13,8 @@ import oscP5.*;
 import netP5.*;
 
 int NUMBER_OF_PLAYERS = 4;
+boolean SIM_MODE = false;
+
 Player[] players;
 
 // Possible musical roles
@@ -66,19 +68,23 @@ void setup() {
   beatSim2 = new BeatSimulator(1, 882, 68);  
   beatSim3 = new BeatSimulator(2, 857, 70);
   beatSim4 = new BeatSimulator(3, 1000, 60);
-//   
-//  beatSim1.start();   
-//  beatSim2.start();
-//  beatSim3.start();
-//  beatSim4.start();  
+
+  if (SIM_MODE) {
+    beatSim1.start();   
+    beatSim2.start();
+    beatSim3.start();
+    beatSim4.start();
+  }    
 }
 
 void draw() {
-    background(204);
-//    beatSim1.update();
-//    beatSim2.update();
-//    beatSim3.update();
-//    beatSim4.update();  
+    if (SIM_MODE) {
+      background(204);
+      beatSim1.update();
+      beatSim2.update();
+      beatSim3.update();
+      beatSim4.update();    
+    }
 }
 
 void mouseReleased() {

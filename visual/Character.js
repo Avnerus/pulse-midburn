@@ -8,8 +8,8 @@
 var TWEEN = require('tween.js');
 var mathUtil = require('./math_util');
 
-var MAX_CENTER_FORCE = 20;
-var MAX_PLAYER_FORCE = 20;
+var MAX_CENTER_FORCE = 10; 
+var MAX_PLAYER_FORCE = 30;
 
 function Character(args){
     this.init(args);
@@ -173,7 +173,7 @@ Character.prototype.onBeatUpdate = function(){
     }
     var self = this;
 
-    var G = 5000;
+    var G = 6000 
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -203,7 +203,7 @@ Character.prototype.onBeatUpdate = function(){
     var vToCenter = mathUtil.subVectors(centerPosition, this.mesh.position);
     vToCenter.normalize();
     var centerForce = 
-        THREE.Math.clamp(distanceToCenter * distanceToCenter * 0.001, 0, MAX_CENTER_FORCE);
+        THREE.Math.clamp(distanceToCenter * distanceToCenter * 1, 0, MAX_CENTER_FORCE);
 
     //console.log("CenterForce = " + centerForce);
     vToCenter.multiplyScalar(centerForce);
