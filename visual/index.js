@@ -40,7 +40,7 @@ this.eventEmitter.on('noSignal', function(args){
 
 
 this.refreshTimer = setInterval(function() {
-    window.location.reload(true);
+//    window.location.reload(true);
 
             
 },1000 * 60 * 3);
