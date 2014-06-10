@@ -13,8 +13,6 @@ import oscP5.*;
 import netP5.*;
 
 int NUMBER_OF_PLAYERS = 4;
-boolean SIM_MODE = false;
-
 Player[] players;
 
 // Possible musical roles
@@ -43,7 +41,7 @@ void setup() {
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",8000);
+  myRemoteLocation = new NetAddress("192.168.111.22",8000);
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -56,7 +54,7 @@ void setup() {
   println(Serial.list());    // print a list of available serial ports
   // choose the number between the [] that is connected to the Arduino
   //port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
-  port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
+  port = new Serial(this, Serial.list()[0], 115200);  // make sure Arduino is talking serial at this baud rate
   port.clear();            // flush buffer
   port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return*/
   
@@ -68,23 +66,19 @@ void setup() {
   beatSim2 = new BeatSimulator(1, 882, 68);  
   beatSim3 = new BeatSimulator(2, 857, 70);
   beatSim4 = new BeatSimulator(3, 1000, 60);
-
-  if (SIM_MODE) {
-    beatSim1.start();   
-    beatSim2.start();
-    beatSim3.start();
-    beatSim4.start();
-  }    
+//   
+  beatSim1.start();   
+  beatSim2.start();
+  beatSim3.start();
+  beatSim4.start();  
 }
 
 void draw() {
-    if (SIM_MODE) {
-      background(204);
-      beatSim1.update();
-      beatSim2.update();
-      beatSim3.update();
-      beatSim4.update();    
-    }
+    background(204);
+    beatSim1.update();
+    beatSim2.update();
+    beatSim3.update();
+    beatSim4.update();  
 }
 
 void mouseReleased() {
