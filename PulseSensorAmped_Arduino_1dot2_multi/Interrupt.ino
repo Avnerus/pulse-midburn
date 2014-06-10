@@ -1,5 +1,6 @@
 
 int THRESHOLD = 650;
+int MINIMUM_THRESHOLD = 550;
     
 typedef volatile struct  {
   volatile int rate[10];                    // array to hold last ten IBI values
@@ -14,7 +15,6 @@ typedef volatile struct  {
 } PulseState;
 
 PulseState sensorsState[NUMBER_OF_SENSORS];
-
 
 void interruptSetup(){     
   // Initializes Timer2 to throw an interrupt every 2mS.
@@ -47,7 +47,7 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
     int N = sensorsState[i].sampleCounter - sensorsState[i].lastBeatTime;       // monitor the time since the last beat to avoid noise
   
      //  find the peak and trough of the pulse wave
-    if(sensorsData[i].Signal < sensorsState[i].thresh && N > (sensorsData[i].IBI/5)*3){       // avoid dichrotic noise by waiting 3/5 of last IBI
+   if(sensorsData[i].Signal < sensorsState[i].thresh && N > (sensorsData[i].IBI/5)*3){       // avoid dichrotic noise by waiting 3/5 of last IBI
       if (sensorsData[i].Signal < sensorsState[i].T){                        // T is the trough
         sensorsState[i].T = sensorsData[i].Signal;                         // keep track of lowest point in pulse wave 
       }
@@ -102,6 +102,10 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
       sensorsData[i].Pulse = false;                         // reset the Pulse flag so we can do it again
       sensorsState[i].amp = sensorsState[i].P - sensorsState[i].T;                           // get amplitude of the pulse wave
       sensorsState[i].thresh = sensorsState[i].amp/2 + sensorsState[i].T;                    // set thresh at 50% of the amplitude
+      if (sensorsState[i].thresh < MINIMUM_THRESHOLD) {
+        sensorsState[i].thresh = THRESHOLD;
+      }
+      
       sensorsState[i].P = sensorsState[i].thresh;                            // reset these for next time
       sensorsState[i].T = sensorsState[i].thresh;
     }
@@ -114,6 +118,8 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
       sensorsState[i].firstBeat = true;                      // set these to avoid noise
       sensorsState[i].secondBeat = false;                    // when we get the heartbeat back
     }
+    
+    sensorsData[i].thresh = sensorsState[i].thresh;
  }
  sei();                                   // enable interrupts when youre done!
 }// end isr

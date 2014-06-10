@@ -32,7 +32,7 @@ Avner Peled, 2014
 
 
 
-#define NUMBER_OF_SENSORS 4
+#define NUMBER_OF_SENSORS 1
 
 //  VARIABLES
 
@@ -50,10 +50,10 @@ typedef volatile struct {
   volatile int IBI;             // holds the time between beats, must be seeded! 
   volatile boolean Pulse;     // true when pulse wave is high, false when it's low
   volatile boolean QS;        // becomes true when Arduoino finds a beat.
+  volatile int thresh;        // becomes true when Arduoino finds a beat.
 } PulseData;
 
 PulseData sensorsData[NUMBER_OF_SENSORS];
-
 
 void setup(){
   pinMode(blinkPin,OUTPUT);         // pin that will blink to your heartbeat!
@@ -79,17 +79,18 @@ void setup(){
 
 void loop(){
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
-     // sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
+//      sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
       if (sensorsData[i].QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
         //    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
             sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
+            sendDataToProcessing(i, 'T',sensorsData[i].thresh);   // send heart rate with a 'B' prefix            
             sensorsData[i].QS = false;                      // reset the Quantified Self flag for next time    
       }    
   }  
 //  ledFadeToBeat();
   
-  delay(5);                            //  take a break
+  delay(25);                            //  take a break
 }
 
 

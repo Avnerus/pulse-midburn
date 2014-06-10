@@ -15,5 +15,5 @@ public void updateServer(int playerId, int bpm, int change){
    json.putAll(map);
 //   println(json);
     
-   HttpClient.doPost("http://192.168.0.101:3005/beat/" + playerId, json); 
+   HttpClient.doPost("http://192.168.111.24:3005/beat/" + playerId, json); 
 }
