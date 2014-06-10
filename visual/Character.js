@@ -8,8 +8,9 @@
 var TWEEN = require('tween.js');
 var mathUtil = require('./math_util');
 
-var MAX_CENTER_FORCE = 20;
-var MAX_PLAYER_FORCE = 20;
+var MAX_CENTER_FORCE = 15; 
+var MAX_PLAYER_FORCE = 30;
+var MAX_POSITION = 60;
 
 function Character(args){
     this.init(args);
@@ -173,7 +174,7 @@ Character.prototype.onBeatUpdate = function(){
     }
     var self = this;
 
-    var G = 5000;
+    var G = 7000 
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -198,12 +199,12 @@ Character.prototype.onBeatUpdate = function(){
     }
 
     // And one vector to be pulled towards the center
-    var centerPosition = new THREE.Vector3(0, 0, this.basicScene.getAverageDepth());
+	    var centerPosition = new THREE.Vector3(0, 0, this.basicScene.getAverageDepth());
     var distanceToCenter = this.mesh.position.distanceTo(centerPosition);
     var vToCenter = mathUtil.subVectors(centerPosition, this.mesh.position);
     vToCenter.normalize();
     var centerForce = 
-        THREE.Math.clamp(distanceToCenter * distanceToCenter * 0.001, 0, MAX_CENTER_FORCE);
+        THREE.Math.clamp(distanceToCenter * distanceToCenter * 1, 0, MAX_CENTER_FORCE);
 
     //console.log("CenterForce = " + centerForce);
     vToCenter.multiplyScalar(centerForce);
@@ -215,6 +216,28 @@ Character.prototype.onBeatUpdate = function(){
     }
 
     self.mesh.setGravityMesh(v);
+     
+    // Limit position 
+/*
+    if (self.mesh.position.x > MAX_POSITION) {
+	self.mesh.position.x = MAX_POSITION;
+    }
+    if (self.mesh.position.y > MAX_POSITION) {
+	self.mesh.position.y = MAX_POSITION;
+    } 
+   if (self.mesh.position.z > centerPosition.z + MAX_POSITION) {
+	self.mesh.position.z = centerPosition.z + MAX_POSITION;
+    } 
+    if (self.mesh.position.x < MAX_POSITION * -1) {
+	self.mesh.position.x = MAX_POSITION * -1;
+    }
+    if (self.mesh.position.y < MAX_POSITION * -1) {
+	self.mesh.position.y = MAX_POSITION * -1;
+    } 
+   if (self.mesh.position.z < centerPosition.z - MAX_POSITION) {
+	self.mesh.position.z = centerPosition.z - MAX_POSITION;
+    }  
+*/
 }
 
 Character.prototype.fireRiseParticles = function(){
