@@ -1,6 +1,7 @@
 
 int THRESHOLD = 650;
 int MINIMUM_THRESHOLD = 550;
+int MINIMUM_BEATS = 2;
     
 typedef volatile struct  {
   volatile int rate[10];                    // array to hold last ten IBI values
@@ -10,8 +11,9 @@ typedef volatile struct  {
   volatile int T;                     // used to find trough in pulse wave, seeded
   volatile int thresh;                // used to find instant moment of heart beat, seeded
   volatile int amp;                   // used to hold amplitude of pulse waveform, seeded
-  volatile boolean firstBeat;        // used to seed rate array so we startup with reasonable BPM
+  volatile int firstBeats;        // used to seed rate array so we startup with reasonable BPM
   volatile boolean secondBeat;      // used to seed rate array so we startup with reasonable BPM
+  volatile boolean stable;      // used to seed rate array so we startup with reasonable BPM
 } PulseState;
 
 PulseState sensorsState[NUMBER_OF_SENSORS];
@@ -31,7 +33,7 @@ void interruptSetup(){
       sensorsState[i].lastBeatTime = 0;
       sensorsState[i].sampleCounter = 0;      
       sensorsState[i].amp = 100;      
-      sensorsState[i].firstBeat = true;                      // set these to avoid noise
+      sensorsState[i].firstBeats = 0;                      // set these to avoid noise
       sensorsState[i].secondBeat = false;                    // when we get the heartbeat back    
   }
 } 
@@ -40,8 +42,9 @@ void interruptSetup(){
 // Timer 2 makes sure that we take a reading every 2 miliseconds
 ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts to 124
   cli();                                      // disable interrupts while we do this
-  for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
+  for (volatile int i = 0; i < NUMBER_OF_SENSORS; i++) {
     sensorsData[i].Signal = analogRead(i);                     // read the Pulse Sensor 
+    
     sensorsState[i].sampleCounter += 2;                         // keep track of the time in mS with this variable
     
     int N = sensorsState[i].sampleCounter - sensorsState[i].lastBeatTime;       // monitor the time since the last beat to avoid noise
@@ -60,7 +63,13 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
     //  NOW IT'S TIME TO LOOK FOR THE HEART BEAT
     // signal surges up in value every time there is a pulse
     if (N > 300){                                   // avoid high frequency noise
-      if ( (sensorsData[i].Signal > sensorsState[i].thresh) && (sensorsData[i].Pulse == false) && (N > (sensorsData[i].IBI/5)*3) ){        
+      volatile int averageIBI;
+      if (sensorsState[i].stable) {
+        averageIBI = 60000 / sensorsData[i].BPM;
+      } else {
+        averageIBI = 600;
+      }
+      if ( (sensorsData[i].Signal > sensorsState[i].thresh) && (sensorsData[i].Pulse == false) && (N > (averageIBI/5)*3) ){        
         sensorsData[i].Pulse = true;                 // set the Pulse flag when we think there is a pulse
 //        digitalWrite(blinkPin,HIGH);                // turn on pin 13 LED
         sensorsData[i].IBI = sensorsState[i].sampleCounter - sensorsState[i].lastBeatTime;         // measure time between beats in mS
@@ -68,22 +77,28 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
   
         if(sensorsState[i].secondBeat){                        // if this is the second beat, if secondBeat == TRUE
           sensorsState[i].secondBeat = false;                  // clear secondBeat flag
-          for(int j=0; j<=9; j++){             // seed the running total to get a realisitic BPM at startup
+          sensorsData[i].secondBeat = sensorsData[i].IBI;
+          for(volatile int j=0; j<=9; j++){             // seed the running total to get a realisitic BPM at startup
             sensorsState[i].rate[j] = sensorsData[i].IBI;                      
           }
+          sensorsState[i].stable = true;
         }
 
-        if(sensorsState[i].firstBeat){                         // if it's the first time we found a beat, if firstBeat == TRUE
-          sensorsState[i].firstBeat = false;                   // clear firstBeat flag
-          sensorsState[i].secondBeat = true;                   // set the second beat flag
-          continue;                              // IBI value is unreliable so discard it
-        }   
+        if(sensorsState[i].firstBeats > MINIMUM_BEATS) {                         // if it's the first time we found a beat, if firstBeat == TRUE
+          if (!sensorsState[i].stable) {
+            //  sensorsState[i].firstBeats = 0;               // clear firstBeat flag                    
+              sensorsState[i].secondBeat = true;                   // set the second beat flag
+              continue;                              // IBI value is unreliable so discard it
+           }
+         } else {
+           sensorsState[i].firstBeats++;
+         }
   
   
         // keep a running total of the last 10 IBI values
         word runningTotal = 0;                  // clear the runningTotal variable    
   
-        for(int j=0; j<=8; j++){                // shift data in the rate array
+        for(volatile int j=0; j<=8; j++){                // shift data in the rate array
           sensorsState[i].rate[j] = sensorsState[i].rate[j+1];                  // and drop the oldest IBI value 
           runningTotal += sensorsState[i].rate[j];              // add up the 9 oldest IBI values
         }
@@ -92,7 +107,10 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
         runningTotal += sensorsState[i].rate[9];                // add the latest IBI to runningTotal
         runningTotal /= 10;                     // average the last 10 IBI values 
         sensorsData[i].BPM = 60000/runningTotal;               // how many beats can fit into a minute? that's BPM!
-        sensorsData[i].QS = true;                              // set Quantified Self flag 
+        if (sensorsState[i].stable) {
+           sensorsData[i].QS = true;                              // set Quantified Self flag 
+        }
+
         // QS FLAG IS NOT CLEARED INSIDE THIS ISR
       }                       
     }
@@ -115,8 +133,10 @@ ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts 
       sensorsState[i].P = THRESHOLD;                               // set P default
       sensorsState[i].T = THRESHOLD;                               // set T default
       sensorsState[i].lastBeatTime = sensorsState[i].sampleCounter;          // bring the lastBeatTime up to date        
-      sensorsState[i].firstBeat = true;                      // set these to avoid noise
+      sensorsState[i].firstBeats = 0;                      // set these to avoid noise
       sensorsState[i].secondBeat = false;                    // when we get the heartbeat back
+      sensorsState[i].stable = false;                    // when we get the heartbeat back
+      sensorsData[i].debugFlag++;
     }
     
     sensorsData[i].thresh = sensorsState[i].thresh;

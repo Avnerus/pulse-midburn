@@ -32,7 +32,7 @@ Avner Peled, 2014
 
 
 
-#define NUMBER_OF_SENSORS 1
+#define NUMBER_OF_SENSORS 4
 
 //  VARIABLES
 
@@ -51,6 +51,8 @@ typedef volatile struct {
   volatile boolean Pulse;     // true when pulse wave is high, false when it's low
   volatile boolean QS;        // becomes true when Arduoino finds a beat.
   volatile int thresh;        // becomes true when Arduoino finds a beat.
+  volatile int secondBeat;
+  volatile int debugFlag;
 } PulseData;
 
 PulseData sensorsData[NUMBER_OF_SENSORS];
@@ -66,6 +68,11 @@ void setup(){
     sensorsData[i].IBI = 600; 
     sensorsData[i].Pulse = false;
     sensorsData[i].QS = false;
+    
+    sensorsData[i].secondBeat = 0;
+    sensorsData[i].debugFlag = 0;   
+
+
   }
   
   
@@ -79,12 +86,14 @@ void setup(){
 
 void loop(){
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
-//    sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
+    //sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor dat
       if (sensorsData[i].QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
         //    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
             sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
             sendDataToProcessing(i, 'T',sensorsData[i].thresh);   // send heart rate with a 'B' prefix            
+ //           sendDataToProcessing(i, '2',sensorsData[i].secondBeat);   // send heart rate with a 'B' prefix     
+   //         sendDataToProcessing(i, 'D',sensorsData[i].debugFlag);   // send heart rate with a 'B' prefix           
             sensorsData[i].QS = false;                      // reset the Quantified Self flag for next time    
       }    
   }  
