@@ -79,7 +79,7 @@ void setup(){
 
 void loop(){
   for (int i = 0; i < NUMBER_OF_SENSORS; i++) {
-//      sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
+//    sendDataToProcessing(i, 'S', sensorsData[i].Signal);     // send Processing the raw Pulse Sensor data
       if (sensorsData[i].QS == true){                       // Quantified Self flag is true when arduino finds a heartbeat
         //    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
@@ -90,7 +90,7 @@ void loop(){
   }  
 //  ledFadeToBeat();
   
-  delay(25);                            //  take a break
+  delay(20);                            //  take a break
 }
 
 
