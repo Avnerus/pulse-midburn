@@ -84,10 +84,17 @@ BasicScene.prototype.init = function () {
     this.scene.add(this.pointLight);
 
 
-    this.sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 100, 100),  new THREE.MeshLambertMaterial({color: 0xff0000}));
+    this.sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 100, 100),  new THREE.MeshLambertMaterial({color: 0xffffff}));
     this.sphere.overdraw = true;
     this.scene.add(this.sphere);
 
+
+    // Scene borders
+    this.borders = [];
+    this.borders.push(this.addBorder(-300,0, 10, 500));
+    this.borders.push(this.addBorder(300,0, 10, 500));
+    this.borders.push(this.addBorder(0,250, 500, 10));
+    this.borders.push(this.addBorder(0,-250, 500, 10));
 
     // Define the container for the renderer
     this.container = $('#basic-scene');
@@ -132,6 +139,25 @@ BasicScene.prototype.init = function () {
 
 }
 
+
+BasicScene.prototype.addBorder = function(x,y,w,h) {
+    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
+    boxMaterial.wireframe = true;
+    var border = 
+        new Physijs.BoxMesh(
+          new THREE.CubeGeometry(w, h, 1000),
+              Physijs.createMaterial(
+                  boxMaterial,
+                  1.0,
+                  1.0
+      ),
+      999 
+    );
+    border.position.set(x, y, 0)
+    this.scene.add(border);
+    return border;
+}
+
 BasicScene.prototype.loadingProgress = function(item, loaded, total) {
     console.log("Loading progress ", item, loaded, total);
 }
@@ -163,6 +189,13 @@ BasicScene.prototype.frame = function () {
 
         this.starField.starFieldGroup.mesh.position = new THREE.Vector3(0, 0, averageDepth + 100);
         this.sphere.position = new THREE.Vector3(0,0, averageDepth);
+
+
+        // Borders
+        for (var i = 0; i < this.borders.length; i++) {
+            var border = this.borders[i];
+            border.position.z = averageDepth - 500;
+        }
 
     }
 

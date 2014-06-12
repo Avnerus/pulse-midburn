@@ -216,28 +216,6 @@ Character.prototype.onBeatUpdate = function(){
     }
 
     self.mesh.setGravityMesh(v);
-     
-    // Limit position 
-/*
-    if (self.mesh.position.x > MAX_POSITION) {
-	self.mesh.position.x = MAX_POSITION;
-    }
-    if (self.mesh.position.y > MAX_POSITION) {
-	self.mesh.position.y = MAX_POSITION;
-    } 
-   if (self.mesh.position.z > centerPosition.z + MAX_POSITION) {
-	self.mesh.position.z = centerPosition.z + MAX_POSITION;
-    } 
-    if (self.mesh.position.x < MAX_POSITION * -1) {
-	self.mesh.position.x = MAX_POSITION * -1;
-    }
-    if (self.mesh.position.y < MAX_POSITION * -1) {
-	self.mesh.position.y = MAX_POSITION * -1;
-    } 
-   if (self.mesh.position.z < centerPosition.z - MAX_POSITION) {
-	self.mesh.position.z = centerPosition.z - MAX_POSITION;
-    }  
-*/
 }
 
 Character.prototype.fireRiseParticles = function(){

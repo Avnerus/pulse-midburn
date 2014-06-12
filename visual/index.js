@@ -35,7 +35,7 @@ this.eventEmitter.on('beat_update', function(args){
 
 this.eventEmitter.on('noSignal', function(args){
     var elementId = "#bpm" + args.id;
-    $(elementId).text("??");
+    $(elementId).text("--");
 });
 
 
