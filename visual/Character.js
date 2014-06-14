@@ -8,9 +8,9 @@
 var TWEEN = require('tween.js');
 var mathUtil = require('./math_util');
 
-var MAX_CENTER_FORCE = 15; 
+var MAX_CENTER_FORCE = 10; 
 var MAX_PLAYER_FORCE = 30;
-var MAX_POSITION = 60;
+var MAX_POSITION = 80;
 
 function Character(args){
     this.init(args);
@@ -68,15 +68,15 @@ Character.prototype.initParticles = function(){
     this.particleTexture = THREE.ImageUtils.loadTexture('/image/spark.png');
     this.particleGroup = new SPE.Group({
         texture: self.particleTexture,
-        maxAge: 1
+        maxAge: 4 
     });
 
     var particleEmitter = new SPE.Emitter({
         type: 'sphere',
         radius: 1,
         speed: 30,
-        sizeStart: 6,
-        sizeStartSpread: 6,
+        sizeStart: 7,
+        sizeStartSpread: 5,
         sizeEnd: 0,
         opacityStart: 1,
         opacityEnd: 0,
@@ -174,7 +174,7 @@ Character.prototype.onBeatUpdate = function(){
     }
     var self = this;
 
-    var G = 7000 
+    var G = 9000 
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];
@@ -199,12 +199,13 @@ Character.prototype.onBeatUpdate = function(){
     }
 
     // And one vector to be pulled towards the center
-	    var centerPosition = new THREE.Vector3(0, 0, this.basicScene.getAverageDepth());
+    var averageDepth = this.basicScene.getAverageDepth();
+    var centerPosition = new THREE.Vector3(0, 0, averageDepth);
     var distanceToCenter = this.mesh.position.distanceTo(centerPosition);
     var vToCenter = mathUtil.subVectors(centerPosition, this.mesh.position);
     vToCenter.normalize();
     var centerForce = 
-        THREE.Math.clamp(distanceToCenter * distanceToCenter * 1, 0, MAX_CENTER_FORCE);
+        THREE.Math.clamp(distanceToCenter * distanceToCenter * 0.1, 0, MAX_CENTER_FORCE);
 
     //console.log("CenterForce = " + centerForce);
     vToCenter.multiplyScalar(centerForce);
@@ -216,6 +217,32 @@ Character.prototype.onBeatUpdate = function(){
     }
 
     self.mesh.setGravityMesh(v);
+
+    // Limit position
+/*    if (self.mesh.position.x > MAX_POSITION) {
+        self.mesh.position.x = MAX_POSITION;
+        self.mesh.__dirtyPosition = true;
+    }
+    if (self.mesh.position.x < MAX_POSITION * -1) {
+        self.mesh.position.x = MAX_POSITION * -1;
+        self.mesh.__dirtyPosition = true;
+    }
+    if (self.mesh.position.y > MAX_POSITION) {
+        self.mesh.position.y = MAX_POSITION;
+        self.mesh.__dirtyPosition = true;
+    }
+    if (self.mesh.position.y < MAX_POSITION * -1) {
+        self.mesh.position.y = MAX_POSITION * -1;
+        self.mesh.__dirtyPosition = true;
+    }
+    if (self.mesh.position.z > averageDepth + MAX_POSITION) {
+        self.mesh.position.z = averageDepth + MAX_POSITION;
+        self.mesh.__dirtyPosition = true;
+    }
+    if (self.mesh.position.z < averageDepth - MAX_POSITION) {
+        self.mesh.position.z = averageDepth - MAX_POSITION;
+        self.mesh.__dirtyPosition = true;
+    }*/
 }
 
 Character.prototype.fireRiseParticles = function(){
@@ -237,6 +264,7 @@ Character.prototype.fireParticles = function(){
 
 
      
+    this.particleGroup.maxAge = self.lastBeat / 60
     this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
 }
 

@@ -91,10 +91,11 @@ BasicScene.prototype.init = function () {
 
     // Scene borders
     this.borders = [];
-    this.borders.push(this.addBorder(-300,0, 10, 500));
-    this.borders.push(this.addBorder(300,0, 10, 500));
-    this.borders.push(this.addBorder(0,250, 500, 10));
-    this.borders.push(this.addBorder(0,-250, 500, 10));
+    
+    this.borders.push(this.addBorder(-120,100, 5,3000));
+    this.borders.push(this.addBorder(120,100, 5,3000));
+//    this.borders.push(this.addBorder(0, 0, 2000, 10));
+ //   ths.borders.push(this.addBorder(0,200, 2000, 10));*/
 
     // Define the container for the renderer
     this.container = $('#basic-scene');
@@ -141,11 +142,11 @@ BasicScene.prototype.init = function () {
 
 
 BasicScene.prototype.addBorder = function(x,y,w,h) {
-    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000});
-    boxMaterial.wireframe = true;
+    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, visible: true});
+  boxMaterial.wireframe = true;
     var border = 
         new Physijs.BoxMesh(
-          new THREE.CubeGeometry(w, h, 1000),
+          new THREE.CubeGeometry(w, h, 2000),
               Physijs.createMaterial(
                   boxMaterial,
                   1.0,
@@ -154,6 +155,7 @@ BasicScene.prototype.addBorder = function(x,y,w,h) {
       999 
     );
     border.position.set(x, y, 0)
+    border.rotation.x = 0 * Math.PI / 180;
     this.scene.add(border);
     return border;
 }
@@ -194,7 +196,7 @@ BasicScene.prototype.frame = function () {
         // Borders
         for (var i = 0; i < this.borders.length; i++) {
             var border = this.borders[i];
-            border.position.z = averageDepth - 500;
+            border.position.z = averageDepth - 100 ; 
         }
 
     }
