@@ -68,7 +68,7 @@ Character.prototype.initParticles = function(){
     this.particleTexture = THREE.ImageUtils.loadTexture('/image/spark.png');
     this.particleGroup = new SPE.Group({
         texture: self.particleTexture,
-        maxAge: 4 
+        maxAge: 3 
     });
 
     var particleEmitter = new SPE.Emitter({
@@ -264,7 +264,7 @@ Character.prototype.fireParticles = function(){
 
 
      
-    this.particleGroup.maxAge = self.lastBeat / 60
+    //this.particleGroup.maxAge = self.lastBeat / 60
     this.particleGroup.triggerPoolEmitter(1, new THREE.Vector3(0, 0, 0));
 }
 

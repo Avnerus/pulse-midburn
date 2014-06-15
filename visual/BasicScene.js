@@ -142,8 +142,8 @@ BasicScene.prototype.init = function () {
 
 
 BasicScene.prototype.addBorder = function(x,y,w,h) {
-    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, visible: true});
-  boxMaterial.wireframe = true;
+    var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, visible: false});
+  //boxMaterial.wireframe = true;
     var border = 
         new Physijs.BoxMesh(
           new THREE.CubeGeometry(w, h, 2000),
