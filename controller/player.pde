@@ -127,11 +127,11 @@ class Player {
           chord[0] = note;
           
           if ((startingNoteIndex + (2 * inc) < 0)) {
-            startingNoteIndex = inc * -3;
+            startingNoteIndex = inc  * 2 * -3;
           }
   
           int nextIndex = startingNoteIndex;
-          for (int i=0; i < 1; i++) {
+          for (int i=0; i < 2; i++) {
             nextIndex = (nextIndex + inc) % CURRENT_SCALE.length;
             
             note = CURRENT_SCALE[nextIndex] + LEAD_OCTAVE + _changeBuffer;
