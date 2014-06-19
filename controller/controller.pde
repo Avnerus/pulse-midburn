@@ -13,7 +13,7 @@ import oscP5.*;
 import netP5.*;
 
 int NUMBER_OF_PLAYERS = 4 ;
-boolean SIM_MODE = true;
+boolean SIM_MODE = false;
 
 Player[] players;
 
@@ -43,7 +43,7 @@ void setup() {
   frameRate(100);
 
   oscP5 = new OscP5(this,12000);
-  myRemoteLocation = new NetAddress("127.0.0.1",8000);
+  myRemoteLocation = new NetAddress("192.168.111.22",8000);
   
   players = new Player[NUMBER_OF_PLAYERS];
   for (int i = 0; i < NUMBER_OF_PLAYERS; i++) {
@@ -57,7 +57,8 @@ void setup() {
   // choose the number between the [] that is connected to the Arduino
  // port = new Serial(this, Serial.list()[0], 115200);  // make sure Arduino is talking serial at this baud rate
  if (!SIM_MODE) {
-     port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
+      port = new Serial(this, Serial.list()[0], 115200);  // make sure Arduino is talking serial at this baud rate
+     //port = new Serial(this, Serial.list()[Serial.list().length - 1], 115200);  // make sure Arduino is talking serial at this baud rate
      port.clear();            // flush buffer 
      port.bufferUntil('\n');  // set buffer full flag on receipt of carriage return*/
  }

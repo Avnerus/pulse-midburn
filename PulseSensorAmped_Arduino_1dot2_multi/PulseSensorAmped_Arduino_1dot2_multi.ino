@@ -91,7 +91,7 @@ void loop(){
         //    fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
             sendDataToProcessing(i, 'Q',sensorsData[i].IBI);   // send time between beats with a 'Q' prefix
             sendDataToProcessing(i, 'B',sensorsData[i].BPM);   // send heart rate with a 'B' prefix
-            sendDataToProcessing(i, 'T',sensorsData[i].thresh);   // send heart rate with a 'B' prefix            
+      //      sendDataToProcessing(i, 'T',sensorsData[i].thresh);   // send heart rate with a 'B' prefix            
  //           sendDataToProcessing(i, '2',sensorsData[i].secondBeat);   // send heart rate with a 'B' prefix     
    //         sendDataToProcessing(i, 'D',sensorsData[i].debugFlag);   // send heart rate with a 'B' prefix           
             sensorsData[i].QS = false;                      // reset the Quantified Self flag for next time    
