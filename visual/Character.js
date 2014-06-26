@@ -174,7 +174,7 @@ Character.prototype.onBeatUpdate = function(){
     }
     var self = this;
 
-    var G = 9000 
+    var G = 9500 
 
     var others = this.basicScene.getOtherCharacter(this.id);
     var normProjVectors = [];

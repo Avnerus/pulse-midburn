@@ -92,10 +92,10 @@ BasicScene.prototype.init = function () {
     // Scene borders
     this.borders = [];
     
-    this.borders.push(this.addBorder(-120,100, 5,3000));
-    this.borders.push(this.addBorder(120,100, 5,3000));
-//    this.borders.push(this.addBorder(0, 0, 2000, 10));
- //   ths.borders.push(this.addBorder(0,200, 2000, 10));*/
+    this.borders.push(this.addBorder(-120,50, 5,400));
+    this.borders.push(this.addBorder(120,50, 5,400));
+    this.borders.push(this.addBorder(0, -50, 50, 10));
+    this.borders.push(this.addBorder(0,50, 50, 10));
 
     // Define the container for the renderer
     this.container = $('#basic-scene');
@@ -143,7 +143,7 @@ BasicScene.prototype.init = function () {
 
 BasicScene.prototype.addBorder = function(x,y,w,h) {
     var boxMaterial = new THREE.MeshBasicMaterial({color: 0xff0000, visible: false});
-  //boxMaterial.wireframe = true;
+// boxMaterial.wireframe = true;
     var border = 
         new Physijs.BoxMesh(
           new THREE.CubeGeometry(w, h, 2000),
@@ -155,7 +155,7 @@ BasicScene.prototype.addBorder = function(x,y,w,h) {
       999 
     );
     border.position.set(x, y, 0)
-    border.rotation.x = 0 * Math.PI / 180;
+//    border.rotation.x = 0 * Math.PI / 180;
     this.scene.add(border);
     return border;
 }
