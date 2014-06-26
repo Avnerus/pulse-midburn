@@ -13,7 +13,7 @@ import oscP5.*;
 import netP5.*;
 
 int NUMBER_OF_PLAYERS = 4 ;
-boolean SIM_MODE = false;
+boolean SIM_MODE = true;
 
 Player[] players;
 
