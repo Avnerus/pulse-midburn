@@ -49,7 +49,7 @@ World.prototype.init = function (args) {
 //    material.map.repeat.set( 3, 3 );
 
     this.ground = new Physijs.BoxMesh(
-        new THREE.CubeGeometry(500, 200, 500),
+        new THREE.BoxGeometry(500, 200, 500),
         material,
         0 // mass
     );

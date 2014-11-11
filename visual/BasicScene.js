@@ -146,7 +146,7 @@ BasicScene.prototype.addBorder = function(x,y,w,h) {
 // boxMaterial.wireframe = true;
     var border = 
         new Physijs.BoxMesh(
-          new THREE.CubeGeometry(w, h, 2000),
+          new THREE.BoxGeometry(w, h, 2000),
               Physijs.createMaterial(
                   boxMaterial,
                   1.0,
@@ -187,10 +187,10 @@ BasicScene.prototype.frame = function () {
             this.characters[i].onTick(this.clock.getDelta);
         }
         var averageDepth = this.getAverageDepth();
-        this.camera.position = new THREE.Vector3(0, 0, averageDepth + 200);
+        this.camera.position.set(0, 0, averageDepth + 200);
 
-        this.starField.starFieldGroup.mesh.position = new THREE.Vector3(0, 0, averageDepth + 100);
-        this.sphere.position = new THREE.Vector3(0,0, averageDepth);
+        this.starField.starFieldGroup.mesh.position.set(0, 0, averageDepth + 100);
+        this.sphere.position.set(0,0, averageDepth);
 
 
         // Borders
